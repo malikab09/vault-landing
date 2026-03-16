@@ -621,6 +621,16 @@
       color: rgba(255,255,255,0.25);
     }
 
+    /* ── FORM ERROR ── */
+    .form-error {
+      font-size: 0.875rem;
+      color: #c0392b;
+      margin-bottom: 14px;
+      min-height: 1.2em;
+    }
+
+    .form-error-dark { color: #ff6b6b; }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
       .steps-grid { grid-template-columns: repeat(2, 1fr); }
@@ -677,8 +687,9 @@
       </form>
       <div class="form-success" id="hero-success">
         <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-        You're on the list — we'll be in touch soon.
+        <span id="hero-success-msg"></span>
       </div>
+      <p class="form-error" id="hero-error"></p>
       <p class="form-note">Free to join. No credit card required.</p>
 
       <div class="hero-social">
@@ -884,8 +895,9 @@
     </form>
     <div class="form-success form-success-dark" id="cta-success">
       <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-      You're on the list — we'll be in touch soon.
+      <span id="cta-success-msg"></span>
     </div>
+    <p class="form-error form-error-dark" id="cta-error"></p>
     <p class="cta-note">No spam. Unsubscribe any time.</p>
   </section>
 
@@ -902,6 +914,7 @@
     </div>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script>
     // FAQ accordion
     document.querySelectorAll('.faq-question').forEach(btn => {
@@ -924,11 +937,41 @@
       });
     });
 
+    // Supabase client
+    const supabase = window.supabase.createClient(
+      'https://bxenkisbaqqjbcdyyoeq.supabase.co',
+      'sb_publishable_P7m9YFuuuQEoI48qa0ocYQ_03n05l-T'
+    );
+
     // Waitlist form submit
-    function handleSubmit(e, formId, successId) {
+    async function handleSubmit(e, formId, successId) {
       e.preventDefault();
-      document.getElementById(formId).style.display = 'none';
-      document.getElementById(successId).style.display = 'flex';
+
+      const form = document.getElementById(formId);
+      const successEl = document.getElementById(successId);
+      const msgEl = document.getElementById(successId.replace('success', 'success-msg'));
+      const errorEl = document.getElementById(successId.replace('success', 'error'));
+      const email = form.querySelector('input[type="email"]').value.trim();
+      const btn = form.querySelector('button[type="submit"]');
+
+      btn.disabled = true;
+      errorEl.textContent = '';
+
+      const { error } = await supabase.from('waitlist').insert({ email });
+
+      btn.disabled = false;
+
+      if (!error) {
+        msgEl.textContent = "You're on the list!";
+        form.style.display = 'none';
+        successEl.style.display = 'flex';
+      } else if (error.code === '23505') {
+        msgEl.textContent = "You're already on the list.";
+        form.style.display = 'none';
+        successEl.style.display = 'flex';
+      } else {
+        errorEl.textContent = 'Something went wrong, please try again.';
+      }
     }
 
     // Smooth scroll
