@@ -938,7 +938,7 @@
     });
 
     // Supabase client
-    const supabase = window.supabase.createClient(
+    const supabaseClient = window.supabase.createClient(
       'https://bxenkisbaqqjbcdyyoeq.supabase.co',
       'sb_publishable_P7m9YFuuuQEoI48qa0ocYQ_03n05l-T'
     );
@@ -957,7 +957,7 @@
       btn.disabled = true;
       errorEl.textContent = '';
 
-      const { error } = await supabase.from('waitlist').insert({ email });
+      const { error } = await supabaseClient.from('waitlist').insert({ email });
 
       btn.disabled = false;
 
