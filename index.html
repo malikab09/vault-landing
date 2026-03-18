@@ -968,6 +968,11 @@
       btn.disabled = false;
 
       if (!error) {
+        fetch('/api/notify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email }),
+        }).catch(() => {});
         msgEl.textContent = "You're on the list!";
         form.style.display = 'none';
         successEl.style.display = 'flex';
