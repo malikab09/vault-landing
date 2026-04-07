@@ -3,32 +3,35 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Vault — Pass Things On With Intention</title>
+  <title>Heirlo — Legacy, Clarified</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --cream: #F5F0E8;
-      --cream-dark: #EDE6D6;
-      --teal: #00B89C;
-      --teal-dark: #009982;
-      --dark: #1A1A18;
-      --dark-mid: #2D2D2A;
-      --muted: #6B6860;
-      --serif: 'Cormorant Garamond', Georgia, serif;
+      --black: #0C1519;
+      --jet: #2A3038;
+      --brass: #CF9D7B;
+      --coffee: #724B39;
+      --brass-muted: rgba(207,157,123,0.5);
+      --brass-dim: rgba(207,157,123,0.25);
+      --brass-faint: rgba(207,157,123,0.10);
+      --white-muted: rgba(255,255,255,0.55);
+      --white-dim: rgba(255,255,255,0.30);
+      --display: 'Fraunces', serif;
       --sans: 'DM Sans', system-ui, sans-serif;
     }
 
     html { scroll-behavior: smooth; }
 
     body {
-      background: var(--cream);
-      color: var(--dark);
+      background: var(--black);
+      color: rgba(255,255,255,0.8);
       font-family: var(--sans);
       font-size: 16px;
+      font-weight: 300;
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
     }
@@ -38,10 +41,10 @@
       position: fixed;
       top: 0; left: 0; right: 0;
       z-index: 100;
-      background: rgba(245, 240, 232, 0.92);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(0,0,0,0.06);
+      background: rgba(12,21,25,0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(207,157,123,0.08);
       height: 64px;
       display: flex;
       align-items: center;
@@ -59,15 +62,21 @@
     }
 
     .nav-logo {
-      font-family: var(--serif);
-      font-size: 1.5rem;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      color: var(--dark);
+      font-family: var(--display);
+      font-size: 1.35rem;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      color: var(--brass);
       text-decoration: none;
+      text-transform: uppercase;
     }
 
-    .nav-logo span { color: var(--teal); }
+    .nav-logo .logo-l { color: var(--coffee); }
+    .nav-logo .logo-o {
+      display: inline-block;
+      animation: floatO 2.6s ease-in-out infinite;
+      filter: drop-shadow(0 0 8px rgba(207,157,123,0.35));
+    }
 
     .nav-links {
       display: flex;
@@ -80,12 +89,12 @@
       font-family: var(--sans);
       font-size: 0.875rem;
       font-weight: 400;
-      color: var(--muted);
+      color: var(--white-dim);
       text-decoration: none;
       transition: color 0.2s;
     }
 
-    .nav-links a:hover { color: var(--dark); }
+    .nav-links a:hover { color: var(--brass); }
 
     .btn {
       display: inline-block;
@@ -94,30 +103,30 @@
       font-weight: 500;
       letter-spacing: 0.02em;
       padding: 10px 22px;
-      border-radius: 6px;
+      border-radius: 8px;
       border: none;
       cursor: pointer;
       text-decoration: none;
       transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
     }
 
-    .btn-teal {
-      background: var(--teal);
-      color: #fff;
+    .btn-brass {
+      background: var(--brass);
+      color: var(--black);
     }
 
-    .btn-teal:hover {
-      background: var(--teal-dark);
+    .btn-brass:hover {
+      background: #d9a989;
       transform: translateY(-1px);
-      box-shadow: 0 4px 16px rgba(0,184,156,0.28);
+      box-shadow: 0 4px 20px rgba(207,157,123,0.3);
     }
 
-    .btn-teal:active { transform: translateY(0); }
+    .btn-brass:active { transform: translateY(0); }
 
     .btn-lg {
       font-size: 1rem;
       padding: 13px 28px;
-      border-radius: 8px;
+      border-radius: 10px;
     }
 
     /* ── HERO ── */
@@ -130,14 +139,15 @@
       text-align: center;
       position: relative;
       overflow: hidden;
+      background: var(--black);
     }
 
     .hero::before {
       content: '';
       position: absolute;
       top: -120px; right: -200px;
-      width: 600px; height: 600px;
-      background: radial-gradient(circle, rgba(0,184,156,0.10) 0%, transparent 70%);
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(207,157,123,0.07) 0%, transparent 70%);
       pointer-events: none;
     }
 
@@ -146,7 +156,7 @@
       position: absolute;
       bottom: -80px; left: -150px;
       width: 500px; height: 500px;
-      background: radial-gradient(circle, rgba(0,184,156,0.06) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(114,75,57,0.06) 0%, transparent 70%);
       pointer-events: none;
     }
 
@@ -160,37 +170,52 @@
       display: inline-block;
       font-family: var(--sans);
       font-size: 0.75rem;
-      font-weight: 500;
+      font-weight: 400;
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: var(--teal);
-      background: rgba(0,184,156,0.10);
+      color: var(--brass);
+      background: var(--brass-faint);
       padding: 5px 14px;
       border-radius: 100px;
       margin-bottom: 28px;
     }
 
-    .hero h1 {
-      font-family: var(--serif);
-      font-size: clamp(2.8rem, 6vw, 5rem);
-      font-weight: 400;
-      line-height: 1.1;
-      letter-spacing: -0.01em;
-      color: var(--dark);
-      margin-bottom: 24px;
+    /* Wordmark in hero */
+    .hero-wordmark {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: clamp(4rem, 12vw, 8rem);
+      line-height: 1;
+      letter-spacing: 0.02em;
+      color: var(--brass);
+      margin-bottom: 8px;
+      text-transform: uppercase;
     }
 
-    .hero h1 em {
-      font-style: italic;
-      color: var(--teal);
+    .hero-wordmark .logo-l { color: var(--coffee); }
+    .hero-wordmark .logo-o {
+      display: inline-block;
+      animation: floatO 2.6s ease-in-out infinite;
+      filter: drop-shadow(0 0 12px rgba(207,157,123,0.4));
+    }
+
+    .hero-tagline {
+      font-family: var(--sans);
+      font-weight: 300;
+      font-size: clamp(0.9rem, 2.5vw, 1.25rem);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--brass-muted);
+      margin-bottom: 32px;
     }
 
     .hero-sub {
       font-size: 1.125rem;
-      color: var(--muted);
+      color: var(--white-muted);
       max-width: 520px;
       margin: 0 auto 48px;
       line-height: 1.7;
+      font-weight: 300;
     }
 
     .waitlist-form {
@@ -204,25 +229,26 @@
       flex: 1;
       font-family: var(--sans);
       font-size: 0.9375rem;
+      font-weight: 300;
       padding: 13px 18px;
-      border: 1.5px solid rgba(0,0,0,0.14);
+      border: 1.5px solid rgba(207,157,123,0.18);
       border-radius: 8px;
-      background: #fff;
-      color: var(--dark);
+      background: rgba(255,255,255,0.04);
+      color: #fff;
       outline: none;
       transition: border-color 0.2s, box-shadow 0.2s;
     }
 
     .waitlist-form input[type="email"]:focus {
-      border-color: var(--teal);
-      box-shadow: 0 0 0 3px rgba(0,184,156,0.12);
+      border-color: var(--brass);
+      box-shadow: 0 0 0 3px rgba(207,157,123,0.12);
     }
 
-    .waitlist-form input[type="email"]::placeholder { color: #aaa; }
+    .waitlist-form input[type="email"]::placeholder { color: rgba(255,255,255,0.3); }
 
     .form-note {
       font-size: 0.8125rem;
-      color: var(--muted);
+      color: var(--white-dim);
       margin-bottom: 56px;
     }
 
@@ -235,7 +261,7 @@
 
     .social-proof {
       font-size: 0.8125rem;
-      color: var(--muted);
+      color: var(--white-dim);
     }
 
     .avatars {
@@ -245,15 +271,15 @@
     .avatar {
       width: 32px; height: 32px;
       border-radius: 50%;
-      border: 2px solid var(--cream);
+      border: 2px solid var(--black);
       margin-left: -8px;
-      background: var(--cream-dark);
+      background: var(--jet);
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 0.75rem;
       font-weight: 500;
-      color: var(--muted);
+      color: var(--brass-muted);
     }
 
     .avatar:first-child { margin-left: 0; }
@@ -265,15 +291,15 @@
       justify-content: center;
       gap: 10px;
       font-size: 0.9375rem;
-      color: var(--teal);
-      font-weight: 500;
+      color: var(--brass);
+      font-weight: 400;
       padding: 14px;
       margin-bottom: 14px;
     }
 
     .form-success svg {
       width: 20px; height: 20px;
-      stroke: var(--teal);
+      stroke: var(--brass);
       fill: none;
       stroke-width: 2.5;
       stroke-linecap: round;
@@ -281,43 +307,38 @@
       flex-shrink: 0;
     }
 
-    .form-success-dark {
-      color: #fff;
-    }
-
-    .form-success-dark svg { stroke: var(--teal); }
-
     /* ── HOW IT WORKS ── */
     .how {
       padding: 112px 32px;
-      background: #fff;
+      background: var(--jet);
     }
 
     .section-label {
       font-family: var(--sans);
       font-size: 0.75rem;
-      font-weight: 500;
+      font-weight: 400;
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: var(--teal);
+      color: var(--brass);
       display: block;
       margin-bottom: 16px;
     }
 
     .section-title {
-      font-family: var(--serif);
+      font-family: var(--display);
       font-size: clamp(2rem, 4vw, 3rem);
-      font-weight: 400;
+      font-weight: 900;
       line-height: 1.15;
-      color: var(--dark);
+      color: #fff;
       margin-bottom: 16px;
     }
 
     .section-sub {
       font-size: 1.0625rem;
-      color: var(--muted);
+      color: var(--white-muted);
       max-width: 520px;
       line-height: 1.7;
+      font-weight: 300;
     }
 
     .section-header {
@@ -331,28 +352,28 @@
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 2px;
-      background: rgba(0,0,0,0.06);
+      background: rgba(207,157,123,0.08);
       border-radius: 16px;
       overflow: hidden;
     }
 
     .step {
-      background: #fff;
+      background: var(--jet);
       padding: 40px 32px;
     }
 
     .step-num {
-      font-family: var(--serif);
+      font-family: var(--display);
       font-size: 3.5rem;
-      font-weight: 300;
-      color: rgba(0,184,156,0.18);
+      font-weight: 900;
+      color: rgba(207,157,123,0.12);
       line-height: 1;
       margin-bottom: 20px;
     }
 
     .step-icon {
       width: 44px; height: 44px;
-      background: rgba(0,184,156,0.10);
+      background: var(--brass-faint);
       border-radius: 10px;
       display: flex;
       align-items: center;
@@ -362,7 +383,7 @@
 
     .step-icon svg {
       width: 22px; height: 22px;
-      stroke: var(--teal);
+      stroke: var(--brass);
       fill: none;
       stroke-width: 1.75;
       stroke-linecap: round;
@@ -370,28 +391,26 @@
     }
 
     .step h3 {
-      font-family: var(--serif);
-      font-size: 1.375rem;
-      font-weight: 500;
-      color: var(--dark);
+      font-family: var(--display);
+      font-size: 1.25rem;
+      font-weight: 900;
+      color: #fff;
       margin-bottom: 10px;
       line-height: 1.2;
     }
 
     .step p {
       font-size: 0.9375rem;
-      color: var(--muted);
+      color: var(--white-muted);
       line-height: 1.65;
+      font-weight: 300;
     }
 
     /* ── WHO IT'S FOR ── */
     .who {
       padding: 112px 32px;
-      background: var(--dark);
+      background: var(--black);
     }
-
-    .who .section-title { color: #fff; }
-    .who .section-sub { color: rgba(255,255,255,0.5); }
 
     .personas-grid {
       max-width: 1120px;
@@ -402,15 +421,15 @@
     }
 
     .persona-card {
-      background: var(--dark-mid);
-      border: 1px solid rgba(255,255,255,0.07);
+      background: var(--jet);
+      border: 1px solid rgba(207,157,123,0.08);
       border-radius: 14px;
       padding: 32px;
       transition: border-color 0.25s, transform 0.25s;
     }
 
     .persona-card:hover {
-      border-color: rgba(0,184,156,0.35);
+      border-color: rgba(207,157,123,0.3);
       transform: translateY(-3px);
     }
 
@@ -421,23 +440,24 @@
     }
 
     .persona-card h3 {
-      font-family: var(--serif);
-      font-size: 1.25rem;
-      font-weight: 500;
+      font-family: var(--display);
+      font-size: 1.15rem;
+      font-weight: 900;
       color: #fff;
       margin-bottom: 8px;
     }
 
     .persona-card p {
       font-size: 0.9rem;
-      color: rgba(255,255,255,0.5);
+      color: var(--white-muted);
       line-height: 1.65;
+      font-weight: 300;
     }
 
     /* ── FAQ ── */
     .faq {
       padding: 112px 32px;
-      background: var(--cream);
+      background: var(--jet);
     }
 
     .faq-inner {
@@ -453,10 +473,10 @@
     }
 
     .faq-item {
-      background: #fff;
+      background: rgba(255,255,255,0.03);
       border-radius: 10px;
       overflow: hidden;
-      border: 1px solid rgba(0,0,0,0.06);
+      border: 1px solid rgba(207,157,123,0.08);
     }
 
     .faq-question {
@@ -472,12 +492,12 @@
       gap: 16px;
       font-family: var(--sans);
       font-size: 1rem;
-      font-weight: 500;
-      color: var(--dark);
+      font-weight: 400;
+      color: #fff;
       transition: background 0.15s;
     }
 
-    .faq-question:hover { background: rgba(0,0,0,0.015); }
+    .faq-question:hover { background: rgba(207,157,123,0.04); }
 
     .faq-icon {
       width: 22px; height: 22px;
@@ -489,7 +509,7 @@
     .faq-icon::after {
       content: '';
       position: absolute;
-      background: var(--teal);
+      background: var(--brass);
       border-radius: 2px;
       transition: transform 0.25s;
     }
@@ -519,25 +539,24 @@
     .faq-answer-inner {
       padding: 0 28px 22px;
       font-size: 0.9375rem;
-      color: var(--muted);
+      color: var(--white-muted);
       line-height: 1.7;
+      font-weight: 300;
     }
 
     /* ── CTA SECTION ── */
     .cta-section {
       padding: 112px 32px;
-      background: var(--dark);
+      background: var(--black);
       text-align: center;
     }
 
     .cta-section .section-title {
-      color: #fff;
       max-width: 600px;
       margin: 0 auto 16px;
     }
 
     .cta-section .section-sub {
-      color: rgba(255,255,255,0.5);
       margin: 0 auto 48px;
     }
 
@@ -552,31 +571,32 @@
       flex: 1;
       font-family: var(--sans);
       font-size: 0.9375rem;
+      font-weight: 300;
       padding: 13px 18px;
-      border: 1.5px solid rgba(255,255,255,0.14);
+      border: 1.5px solid rgba(207,157,123,0.14);
       border-radius: 8px;
-      background: rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.04);
       color: #fff;
       outline: none;
       transition: border-color 0.2s, box-shadow 0.2s;
     }
 
-    .cta-waitlist-form input[type="email"]::placeholder { color: rgba(255,255,255,0.35); }
+    .cta-waitlist-form input[type="email"]::placeholder { color: rgba(255,255,255,0.3); }
 
     .cta-waitlist-form input[type="email"]:focus {
-      border-color: var(--teal);
-      box-shadow: 0 0 0 3px rgba(0,184,156,0.15);
+      border-color: var(--brass);
+      box-shadow: 0 0 0 3px rgba(207,157,123,0.12);
     }
 
     .cta-note {
       font-size: 0.8125rem;
-      color: rgba(255,255,255,0.3);
+      color: var(--white-dim);
     }
 
     /* ── FOOTER ── */
     footer {
-      background: var(--dark);
-      border-top: 1px solid rgba(255,255,255,0.06);
+      background: var(--black);
+      border-top: 1px solid rgba(207,157,123,0.08);
       padding: 48px 32px;
     }
 
@@ -591,15 +611,16 @@
     }
 
     .footer-logo {
-      font-family: var(--serif);
-      font-size: 1.25rem;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      color: #fff;
+      font-family: var(--display);
+      font-size: 1.15rem;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      color: var(--brass);
       text-decoration: none;
+      text-transform: uppercase;
     }
 
-    .footer-logo span { color: var(--teal); }
+    .footer-logo .logo-l { color: var(--coffee); }
 
     .footer-links {
       display: flex;
@@ -609,27 +630,31 @@
 
     .footer-links a {
       font-size: 0.875rem;
-      color: rgba(255,255,255,0.4);
+      color: var(--white-dim);
       text-decoration: none;
       transition: color 0.2s;
     }
 
-    .footer-links a:hover { color: rgba(255,255,255,0.75); }
+    .footer-links a:hover { color: var(--brass); }
 
     .footer-copy {
       font-size: 0.8125rem;
-      color: rgba(255,255,255,0.25);
+      color: rgba(255,255,255,0.2);
     }
 
     /* ── FORM ERROR ── */
     .form-error {
       font-size: 0.875rem;
-      color: #c0392b;
+      color: #ff6b6b;
       margin-bottom: 14px;
       min-height: 1.2em;
     }
 
-    .form-error-dark { color: #ff6b6b; }
+    /* ── FLOATING O ANIMATION ── */
+    @keyframes floatO {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-7px); }
+    }
 
     /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
@@ -662,13 +687,13 @@
   <!-- NAV -->
   <nav id="main-nav">
     <div class="nav-inner">
-      <a href="#" class="nav-logo">Vault<span>.</span></a>
+      <a href="#" class="nav-logo">HEIR<span class="logo-l">L</span><span class="logo-o">O</span></a>
       <ul class="nav-links">
         <li><a href="#how-it-works">How it works</a></li>
         <li><a href="#who-its-for">Who it's for</a></li>
         <li><a href="#faq">FAQ</a></li>
       </ul>
-      <a href="#waitlist" class="btn btn-teal">Join Waitlist</a>
+      <a href="#waitlist" class="btn btn-brass">Join Waitlist</a>
     </div>
   </nav>
 
@@ -676,14 +701,15 @@
   <section class="hero" id="waitlist">
     <div class="hero-inner">
       <span class="hero-eyebrow">Now accepting early access</span>
-      <h1>Pass things on<br />with <em>intention</em></h1>
+      <div class="hero-wordmark">HEIR<span class="logo-l">L</span><span class="logo-o">O</span></div>
+      <p class="hero-tagline">Legacy, clarified.</p>
       <p class="hero-sub">
-        Vault helps you document your belongings, assign them to the people who matter, and create a clear record — so nothing is lost, disputed, or forgotten.
+        Heirlo helps you document your belongings, assign them to the people who matter, and create a clear record — so nothing is lost, disputed, or forgotten.
       </p>
 
       <form class="waitlist-form" id="hero-form" onsubmit="handleSubmit(event,'hero-form','hero-success')">
         <input type="email" placeholder="your@email.com" required aria-label="Email address" />
-        <button type="submit" class="btn btn-teal btn-lg">Join Waitlist</button>
+        <button type="submit" class="btn btn-brass btn-lg">Join Waitlist</button>
       </form>
       <div class="form-success" id="hero-success">
         <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
@@ -757,50 +783,50 @@
     <div class="section-header" style="max-width:1120px;margin:0 auto 56px;">
       <span class="section-label">Who it's for</span>
       <h2 class="section-title">Built for people<br />thinking ahead</h2>
-      <p class="section-sub">Vault is for anyone who cares about what happens to the things they love.</p>
+      <p class="section-sub">Heirlo is for anyone who cares about what happens to the things they love.</p>
     </div>
 
     <div class="personas-grid">
       <div class="persona-card">
         <span class="persona-emoji">👵</span>
         <h3>The Grandparent Archivist</h3>
-        <p><strong style="color:rgba(255,255,255,0.35);font-weight:400;">Trigger: Retirement or health change</strong></p>
+        <p><strong style="color:rgba(207,157,123,0.4);font-weight:300;">Trigger: Retirement or health change</strong></p>
         <p>Has a lifetime of meaningful objects and wants the family to understand what they mean — and who should have them.</p>
       </div>
 
       <div class="persona-card">
         <span class="persona-emoji">✈️</span>
         <h3>The Anxious Traveler</h3>
-        <p><strong style="color:rgba(255,255,255,0.35);font-weight:400;">Trigger: Mortality salience spike</strong></p>
-        <p>Books a long flight and suddenly feels the weight of everything left unspoken. Opens Vault at 2am before takeoff.</p>
+        <p><strong style="color:rgba(207,157,123,0.4);font-weight:300;">Trigger: Mortality salience spike</strong></p>
+        <p>Books a long flight and suddenly feels the weight of everything left unspoken. Opens Heirlo at 2am before takeoff.</p>
       </div>
 
       <div class="persona-card">
         <span class="persona-emoji">🐾</span>
         <h3>The Worried Pet Owner</h3>
-        <p><strong style="color:rgba(255,255,255,0.35);font-weight:400;">Trigger: Late-night fear</strong></p>
+        <p><strong style="color:rgba(207,157,123,0.4);font-weight:300;">Trigger: Late-night fear</strong></p>
         <p>Wants to make sure someone has committed — actually committed — to caring for their dog if something happens.</p>
       </div>
 
       <div class="persona-card">
         <span class="persona-emoji">👶</span>
         <h3>The New Parent</h3>
-        <p><strong style="color:rgba(255,255,255,0.35);font-weight:400;">Trigger: Birth of first child</strong></p>
-        <p>Realizing for the first time that their things need to go somewhere specific. Doesn't know where to start. Vault is the start.</p>
+        <p><strong style="color:rgba(207,157,123,0.4);font-weight:300;">Trigger: Birth of first child</strong></p>
+        <p>Realizing for the first time that their things need to go somewhere specific. Doesn't know where to start. Heirlo is the start.</p>
       </div>
 
       <div class="persona-card">
         <span class="persona-emoji">⚖️</span>
         <h3>The Recently Divorced</h3>
-        <p><strong style="color:rgba(255,255,255,0.35);font-weight:400;">Trigger: Asset division</strong></p>
+        <p><strong style="color:rgba(207,157,123,0.4);font-weight:300;">Trigger: Asset division</strong></p>
         <p>Ownership of everything just got renegotiated. Wants a clean record of what's theirs and who it goes to — on their terms.</p>
       </div>
 
       <div class="persona-card">
         <span class="persona-emoji">💙</span>
         <h3>The Devoted Child</h3>
-        <p><strong style="color:rgba(255,255,255,0.35);font-weight:400;">Trigger: Parent's diagnosis</strong></p>
-        <p>Helping an aging parent get organized before it becomes a crisis. Vault is the conversation starter that doesn't feel like death planning.</p>
+        <p><strong style="color:rgba(207,157,123,0.4);font-weight:300;">Trigger: Parent's diagnosis</strong></p>
+        <p>Helping an aging parent get organized before it becomes a crisis. Heirlo is the conversation starter that doesn't feel like death planning.</p>
       </div>
     </div>
   </section>
@@ -815,24 +841,24 @@
 
         <div class="faq-item">
           <button class="faq-question" aria-expanded="false">
-            Is Vault a legal service or a law firm?
+            Is Heirlo a legal service or a law firm?
             <span class="faq-icon" aria-hidden="true"></span>
           </button>
           <div class="faq-answer" role="region">
             <div class="faq-answer-inner">
-              No. Vault is a documentation platform, not a law firm. We do not give legal advice. The document Vault generates is a Personal Property Memorandum — a statutory instrument under UPC §2-513 that doesn't require attorney involvement to be valid in 41 U.S. states. For wills, trusts, and complex estate matters, you'll want an attorney. Vault handles everything they don't.
+              No. Heirlo is a documentation platform, not a law firm. We do not give legal advice. The document Heirlo generates is a Personal Property Memorandum — a statutory instrument under UPC §2-513 that doesn't require attorney involvement to be valid in 41 U.S. states. For wills, trusts, and complex estate matters, you'll want an attorney. Heirlo handles everything they don't.
             </div>
           </div>
         </div>
 
         <div class="faq-item">
           <button class="faq-question" aria-expanded="false">
-            Is the document Vault generates legally enforceable?
+            Is the document Heirlo generates legally enforceable?
             <span class="faq-icon" aria-hidden="true"></span>
           </button>
           <div class="faq-answer" role="region">
             <div class="faq-answer-inner">
-              In 41 U.S. states that have adopted UPC provisions, a signed Personal Property Memorandum is a legally recognized instrument for distributing tangible personal property. Vault generates a document built to meet those minimum enforceability criteria — written, signed, and notarization-ready with clear language of testamentary intent. We deliver more than we promise.
+              In 41 U.S. states that have adopted UPC provisions, a signed Personal Property Memorandum is a legally recognized instrument for distributing tangible personal property. Heirlo generates a document built to meet those minimum enforceability criteria — written, signed, and notarization-ready with clear language of testamentary intent. We deliver more than we promise.
             </div>
           </div>
         </div>
@@ -844,19 +870,19 @@
           </button>
           <div class="faq-answer" role="region">
             <div class="faq-answer-inner">
-              Vault is completely free to use. Document your items, assign recipients, and collect acknowledgments at no cost. Pricing for additional features will be announced soon.
+              Heirlo is completely free to use. Document your items, assign recipients, and collect acknowledgments at no cost. Pricing for additional features will be announced soon.
             </div>
           </div>
         </div>
 
         <div class="faq-item">
           <button class="faq-question" aria-expanded="false">
-            Do my family members need a Vault account?
+            Do my family members need an Heirlo account?
             <span class="faq-icon" aria-hidden="true"></span>
           </button>
           <div class="faq-answer" role="region">
             <div class="faq-answer-inner">
-              Recipients receive an email when they've been assigned an item. They can view and acknowledge the assignment through a simple web page — no app download or account required. The acknowledgment is timestamped and stored in your Vault automatically.
+              Recipients receive an email when they've been assigned an item. They can view and acknowledge the assignment through a simple web page — no app download or account required. The acknowledgment is timestamped and stored automatically.
             </div>
           </div>
         </div>
@@ -868,19 +894,19 @@
           </button>
           <div class="faq-answer" role="region">
             <div class="faq-answer-inner">
-              Yes. Your vault is private by default. Only you can see your full item catalog. Recipients only see the specific items assigned to them. All data is stored securely — your information is never shared or sold.
+              Yes. Your data is private by default. Only you can see your full item catalog. Recipients only see the specific items assigned to them. All data is stored securely — your information is never shared or sold.
             </div>
           </div>
         </div>
 
         <div class="faq-item">
           <button class="faq-question" aria-expanded="false">
-            Does Vault replace a will?
+            Does Heirlo replace a will?
             <span class="faq-icon" aria-hidden="true"></span>
           </button>
           <div class="faq-answer" role="region">
             <div class="faq-answer-inner">
-              No — and we're clear about that. A will handles the legal transfer of your entire estate. Vault handles the specific, tangible things a will almost never names: your grandmother's ring, your dog, your guitar, your record collection. Vault works alongside any existing or future will.
+              No — and we're clear about that. A will handles the legal transfer of your entire estate. Heirlo handles the specific, tangible things a will almost never names: your grandmother's ring, your dog, your guitar, your record collection. Heirlo works alongside any existing or future will.
             </div>
           </div>
         </div>
@@ -892,31 +918,31 @@
   <!-- SECOND CTA -->
   <section class="cta-section">
     <span class="section-label">Get early access</span>
-    <h2 class="section-title">Legacy should be <span style="color:#00B89C;">acknowledged</span>, not assumed.</h2>
+    <h2 class="section-title">Legacy should be <span style="color:var(--brass);">acknowledged</span>, not assumed.</h2>
     <p class="section-sub">Join hundreds of families who are already thinking ahead. Early access is free.</p>
 
     <form class="cta-waitlist-form" id="cta-form" onsubmit="handleSubmit(event,'cta-form','cta-success')">
       <input type="email" placeholder="your@email.com" required aria-label="Email address" />
-      <button type="submit" class="btn btn-teal btn-lg">Join the Waitlist</button>
+      <button type="submit" class="btn btn-brass btn-lg">Join the Waitlist</button>
     </form>
-    <div class="form-success form-success-dark" id="cta-success">
+    <div class="form-success" id="cta-success">
       <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
       <span id="cta-success-msg"></span>
     </div>
-    <p class="form-error form-error-dark" id="cta-error"></p>
+    <p class="form-error" id="cta-error"></p>
     <p class="cta-note">No spam. Unsubscribe any time.</p>
   </section>
 
   <!-- FOOTER -->
   <footer>
     <div class="footer-inner">
-      <a href="#" class="footer-logo">Vault<span>.</span></a>
+      <a href="#" class="footer-logo">HEIR<span class="logo-l">L</span>O</a>
       <ul class="footer-links">
         <li><a href="#">Privacy</a></li>
         <li><a href="#">Terms</a></li>
         <li><a href="#">Contact</a></li>
       </ul>
-      <span class="footer-copy">&copy; 2026 Vault. All rights reserved.</span>
+      <span class="footer-copy">&copy; 2026 Heirlo. All rights reserved.</span>
     </div>
   </footer>
 
@@ -996,12 +1022,12 @@
       });
     });
 
-    // Nav shadow on scroll
+    // Nav border on scroll
     const nav = document.getElementById('main-nav');
     window.addEventListener('scroll', () => {
       nav.style.borderBottomColor = window.scrollY > 20
-        ? 'rgba(0,0,0,0.12)'
-        : 'rgba(0,0,0,0.06)';
+        ? 'rgba(207,157,123,0.15)'
+        : 'rgba(207,157,123,0.08)';
     }, { passive: true });
   </script>
 </body>

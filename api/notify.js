@@ -16,8 +16,8 @@ export default async function handler(req, res) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      from: 'hello@mysecuredvault.com',
-      to: 'hello@mysecuredvault.com',
+      from: 'hello@heirlo.app',
+      to: 'hello@heirlo.app',
       subject: 'New Waitlist Signup',
       text: `New signup: ${email}`,
     }),
