@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0C1519">
+<title>Heirlo — Owner Flow</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,300;1,9..144,400&family=DM+Sans:wght@300;400;500;700&display=swap');
+:root {
+  --black:  #0C1519;
+  --jungle: #162127;
+  --jet:    #2A3038;
+  --coffee: #724B39;
+  --brass:  #CF9D7B;
+  --linen:  #F5EFE8;
+  --linen2: #EDE5DB;
+  --muted:  rgba(207,157,123,0.55);
+  --rule:   rgba(207,157,123,0.14);
+  --faint:  rgba(207,157,123,0.06);
+  --text:   #F5EFE8;
+  --safe-top: env(safe-area-inset-top, 44px);
+  --safe-bot: env(safe-area-inset-bottom, 34px);
+}
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; -webkit-touch-callout:none; }
+html, body { width:100%; height:100%; overflow:hidden; background:var(--black); font-family:'DM Sans',-apple-system,sans-serif; color:var(--brass); position:fixed; inset:0; }
+
+/* ── SCREENS ── */
+.scr { position:fixed; inset:0; opacity:0; pointer-events:none; transition:opacity 0.3s ease; display:flex; flex-direction:column; overflow:hidden; }
+.scr.on { opacity:1; pointer-events:all; }
+
+/* ── STATUS BAR ── */
+.sb { padding-top:var(--safe-top); padding-left:22px; padding-right:22px; padding-bottom:6px; display:flex; justify-content:space-between; align-items:center; font-family:'DM Sans',sans-serif; font-size:14px; font-weight:700; flex-shrink:0; }
+.sb-icons { display:flex; align-items:center; gap:5px; }
+
+/* ══════════════════════════════════════════
+   S1 — APP STORE SEARCH
+══════════════════════════════════════════ */
+#s1 { background:#F2F2F7; color:#000; }
+.s1 .sb { color:#000; }
+.as-nav { padding:10px 16px 8px; background:#F2F2F7; flex-shrink:0; }
+.as-search-bar { background:#fff; border-radius:12px; padding:10px 14px; display:flex; align-items:center; gap:8px; border:1px solid rgba(0,0,0,0.1); box-shadow:0 1px 4px rgba(0,0,0,0.06); }
+.as-search-icon { flex-shrink:0; opacity:0.4; }
+.as-search-text { font-size:15px; color:#000; font-weight:400; flex:1; }
+.as-search-cursor { display:inline-block; width:1.5px; height:17px; background:#007AFF; margin-left:1px; vertical-align:middle; animation:blink 1s step-end infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+.as-body { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:0 16px 20px; }
+.as-section-title { font-size:13px; font-weight:700; color:#888; letter-spacing:0.04em; text-transform:uppercase; margin:18px 0 10px; }
+.as-result-card { background:#fff; border-radius:16px; padding:14px; display:flex; align-items:center; gap:14px; box-shadow:0 1px 6px rgba(0,0,0,0.07); margin-bottom:10px; cursor:pointer; }
+.as-result-card:active { opacity:0.85; }
+.as-app-icon { width:64px; height:64px; border-radius:14px; background:var(--black); display:flex; flex-direction:column; align-items:center; justify-content:center; flex-shrink:0; gap:1px; box-shadow:0 2px 8px rgba(0,0,0,0.2); }
+.as-icon-halo { width:34px; height:10px; }
+.as-icon-h { font-family:'Fraunces',serif; font-weight:900; font-size:26px; color:var(--brass); line-height:1; }
+.as-app-info { flex:1; min-width:0; }
+.as-app-name { font-size:16px; font-weight:700; color:#000; margin-bottom:2px; }
+.as-app-cat { font-size:12px; color:#888; margin-bottom:6px; }
+.as-app-stars { font-size:11px; color:#888; }
+.as-get-btn { background:#007AFF; color:#fff; border:none; border-radius:14px; padding:7px 18px; font-size:14px; font-weight:700; font-family:'DM Sans',sans-serif; cursor:pointer; flex-shrink:0; }
+.as-get-btn:active { opacity:0.8; }
+.as-screenshots { display:flex; gap:10px; overflow-x:auto; padding-bottom:4px; margin-top:16px; }
+.as-ss { width:120px; height:200px; border-radius:14px; background:var(--jungle); border:1px solid var(--rule); flex-shrink:0; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+
+/* ══════════════════════════════════════════
+   S2 — DOWNLOADING
+══════════════════════════════════════════ */
+#s2 { background:#F2F2F7; color:#000; align-items:center; justify-content:center; }
+.dl-wrap { display:flex; flex-direction:column; align-items:center; gap:24px; }
+.dl-icon { width:100px; height:100px; border-radius:22px; background:var(--black); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; box-shadow:0 8px 32px rgba(0,0,0,0.25); }
+.dl-icon-halo { width:52px; height:14px; }
+.dl-icon-h { font-family:'Fraunces',serif; font-weight:900; font-size:40px; color:var(--brass); line-height:1; }
+.dl-ring-wrap { position:relative; width:54px; height:54px; }
+.dl-ring-bg { position:absolute; inset:0; border-radius:50%; border:4px solid rgba(0,122,255,0.15); }
+.dl-ring-fill { position:absolute; inset:0; border-radius:50%; border:4px solid transparent; border-top-color:#007AFF; border-right-color:#007AFF; animation:spin-dl 1.2s linear forwards; }
+@keyframes spin-dl { 0%{transform:rotate(-90deg)} 100%{transform:rotate(270deg)} }
+.dl-label { font-size:15px; color:#888; font-weight:500; }
+.dl-name { font-family:'Fraunces',serif; font-size:22px; font-weight:900; color:var(--black); letter-spacing:0.03em; }
+
+/* ══════════════════════════════════════════
+   S3 — APP OPEN / WELCOME
+══════════════════════════════════════════ */
+#s3 { background:var(--black); }
+.s3-glow { position:absolute; width:80vw; height:80vw; border-radius:50%; background:radial-gradient(circle,rgba(207,157,123,0.09) 0%,transparent 70%); top:35%; left:50%; transform:translate(-50%,-50%); animation:aura 5s ease-in-out infinite; pointer-events:none; }
+@keyframes aura { 0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.7} 50%{transform:translate(-50%,-50%) scale(1.1);opacity:1} }
+.s3-body { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:32px 28px; text-align:center; position:relative; z-index:1; }
+.s3-wordmark { font-family:'Fraunces',serif; font-weight:900; font-size:52px; color:var(--brass); letter-spacing:0.04em; display:flex; align-items:flex-end; line-height:1; position:relative; margin-bottom:4px; }
+.s3-l { color:var(--coffee); }
+.s3-o { display:inline-block; animation:floatO 2.6s ease-in-out infinite; filter:drop-shadow(0 0 12px rgba(207,157,123,0.8)); }
+@keyframes floatO { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-7px)} }
+.s3-halo { position:absolute; top:-10px; right:-4px; width:clamp(40px,11vw,52px); height:clamp(12px,3vw,16px); }
+.s3-tag { font-family:'Fraunces',serif; font-size:17px; font-weight:300; font-style:italic; color:var(--muted); margin-bottom:40px; }
+.s3-cta { width:100%; max-width:320px; padding:17px; background:var(--brass); color:var(--black); border:none; border-radius:13px; font-family:'DM Sans',sans-serif; font-size:15px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; cursor:pointer; margin-bottom:12px; box-shadow:0 4px 20px rgba(207,157,123,0.3); }
+.s3-cta:active { opacity:0.88; transform:scale(0.98); }
+.s3-secondary { background:transparent; border:0.5px solid var(--rule); color:var(--muted); border-radius:13px; padding:14px; font-size:14px; font-family:'DM Sans',sans-serif; cursor:pointer; width:100%; max-width:320px; }
+.s3-legal { font-size:11px; color:var(--muted); opacity:0.5; margin-top:16px; line-height:1.6; max-width:280px; }
+
+/* ══════════════════════════════════════════
+   S4 — DASHBOARD / VAULT (empty)
+══════════════════════════════════════════ */
+#s4 { background:var(--black); }
+.dash-nav { padding-top:var(--safe-top); padding-left:20px; padding-right:20px; padding-bottom:12px; display:flex; align-items:center; justify-content:space-between; border-bottom:0.5px solid var(--rule); flex-shrink:0; }
+.dash-wordmark { font-family:'Fraunces',serif; font-weight:900; font-size:22px; color:var(--brass); letter-spacing:0.04em; display:flex; align-items:flex-end; }
+.dash-l { color:var(--coffee); }
+.dash-o { display:inline-block; animation:floatO 2.6s ease-in-out infinite; }
+.dash-add-btn { width:34px; height:34px; border-radius:50%; background:var(--brass); display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 2px 12px rgba(207,157,123,0.35); }
+.dash-add-btn:active { opacity:0.8; transform:scale(0.95); }
+.dash-scroll { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:24px 20px 0; }
+.dash-greeting { font-family:'Fraunces',serif; font-size:26px; font-weight:900; color:var(--brass); margin-bottom:4px; letter-spacing:0.02em; }
+.dash-sub { font-size:13px; color:var(--muted); margin-bottom:28px; font-weight:300; }
+.dash-empty { background:var(--jungle); border:0.5px solid var(--rule); border-radius:18px; padding:36px 24px; text-align:center; margin-bottom:20px; }
+.dash-empty-icon { width:56px; height:56px; border-radius:14px; background:var(--faint); border:0.5px solid var(--rule); display:flex; align-items:center; justify-content:center; margin:0 auto 16px; }
+.dash-empty-title { font-family:'Fraunces',serif; font-size:18px; font-weight:700; color:var(--brass); margin-bottom:8px; }
+.dash-empty-body { font-size:13px; color:var(--muted); line-height:1.6; font-weight:300; }
+.dash-first-btn { width:100%; padding:16px; background:var(--brass); color:var(--black); border:none; border-radius:13px; font-family:'DM Sans',sans-serif; font-size:14px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; cursor:pointer; margin-top:20px; box-shadow:0 4px 20px rgba(207,157,123,0.3); }
+.dash-first-btn:active { opacity:0.88; transform:scale(0.98); }
+
+/* ══════════════════════════════════════════
+   S5 — ADD ITEM FORM
+══════════════════════════════════════════ */
+#s5 { background:var(--black); }
+.form-nav { padding-top:var(--safe-top); padding-left:20px; padding-right:20px; padding-bottom:12px; display:flex; align-items:center; gap:10px; border-bottom:0.5px solid var(--rule); flex-shrink:0; }
+.form-back { width:34px; height:34px; border-radius:50%; background:var(--faint); border:0.5px solid var(--rule); display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; }
+.form-back:active { opacity:0.6; }
+.form-title { font-family:'Fraunces',serif; font-size:17px; font-style:italic; color:var(--muted); }
+.form-scroll { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:22px 18px 0; }
+.form-photo-zone { width:100%; height:clamp(160px,44vw,190px); background:var(--jungle); border:0.5px dashed rgba(207,157,123,0.3); border-radius:18px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; margin-bottom:20px; cursor:pointer; position:relative; overflow:hidden; }
+.form-photo-zone.has-photo { border-style:solid; border-color:rgba(207,157,123,0.2); }
+.form-photo-zone:active { opacity:0.85; }
+.form-photo-label { font-size:12px; color:var(--muted); font-weight:500; letter-spacing:0.06em; text-transform:uppercase; }
+.photo-preview { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg,var(--black),var(--jungle)); }
+.form-group { margin-bottom:18px; }
+.form-label { font-size:9px; font-weight:700; letter-spacing:0.22em; text-transform:uppercase; color:var(--coffee); margin-bottom:7px; display:block; }
+.form-input { width:100%; background:var(--jungle); border:0.5px solid var(--rule); border-radius:12px; padding:14px 16px; font-size:15px; color:var(--text); font-family:'DM Sans',sans-serif; font-weight:400; outline:none; }
+.form-input.filled { border-color:rgba(207,157,123,0.3); }
+.form-input::placeholder { color:var(--muted); opacity:0.5; }
+.form-input-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.form-textarea { width:100%; background:var(--jungle); border:0.5px solid var(--rule); border-radius:12px; padding:14px 16px; font-size:14px; color:var(--text); font-family:'DM Sans',sans-serif; font-weight:300; outline:none; resize:none; min-height:90px; line-height:1.6; }
+.form-textarea.filled { border-color:rgba(207,157,123,0.3); }
+.recipient-pill { display:inline-flex; align-items:center; gap:6px; background:var(--faint); border:0.5px solid var(--rule); border-radius:20px; padding:7px 13px; font-size:12px; color:var(--brass); font-weight:500; margin-right:8px; margin-bottom:8px; }
+.recipient-pill.selected { background:rgba(207,157,123,0.15); border-color:rgba(207,157,123,0.35); }
+.form-actions { padding:14px 18px; padding-bottom:calc(var(--safe-bot) + 18px); border-top:0.5px solid var(--rule); flex-shrink:0; background:var(--black); }
+.form-save-btn { width:100%; padding:17px; background:var(--brass); color:var(--black); border:none; border-radius:13px; font-family:'DM Sans',sans-serif; font-size:14px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; box-shadow:0 4px 20px rgba(207,157,123,0.3); position:relative; overflow:hidden; }
+.form-save-btn:active { opacity:0.88; transform:scale(0.98); }
+
+/* ══════════════════════════════════════════
+   S6 — VAULT WITH ITEM
+══════════════════════════════════════════ */
+#s6 { background:var(--black); }
+.item-card { background:var(--jungle); border:0.5px solid var(--rule); border-radius:18px; overflow:hidden; margin-bottom:14px; }
+.item-card-photo { width:100%; height:clamp(140px,38vw,165px); background:linear-gradient(135deg,var(--black),var(--jungle)); display:flex; align-items:center; justify-content:center; position:relative; }
+.item-card-glow { position:absolute; inset:0; background:radial-gradient(circle at 50%,rgba(207,157,123,0.08),transparent 65%); }
+.item-card-info { padding:14px 16px; }
+.item-card-tag { font-size:9px; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; color:var(--coffee); margin-bottom:5px; }
+.item-card-name { font-family:'Fraunces',serif; font-size:20px; font-weight:900; color:var(--brass); margin-bottom:4px; letter-spacing:0.02em; }
+.item-card-assigned { display:inline-flex; align-items:center; gap:6px; background:var(--faint); border:0.5px solid var(--rule); border-radius:20px; padding:4px 10px; font-size:11px; color:var(--muted); margin-bottom:10px; }
+.item-card-msg { font-family:'Fraunces',serif; font-size:13px; font-weight:300; font-style:italic; color:var(--muted); line-height:1.5; }
+.item-status-row { display:flex; align-items:center; gap:6px; margin-top:10px; padding-top:10px; border-top:0.5px solid var(--rule); }
+.status-dot { width:7px; height:7px; border-radius:50%; background:var(--coffee); flex-shrink:0; }
+.status-dot.pending { background:var(--coffee); }
+.status-text { font-size:11px; color:var(--muted); font-family:'DM Sans',sans-serif; font-weight:500; letter-spacing:0.06em; text-transform:uppercase; }
+.dash-gen-btn { width:100%; padding:16px; background:var(--black); color:var(--brass); border:0.5px solid rgba(207,157,123,0.3); border-radius:13px; font-family:'DM Sans',sans-serif; font-size:14px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; cursor:pointer; margin-top:4px; display:flex; align-items:center; justify-content:center; gap:8px; }
+.dash-gen-btn:active { opacity:0.8; }
+
+/* ── SHARED UTILS ── */
+.faint { background:var(--faint); }
+@keyframes breathe { 0%,100%{opacity:.35} 50%{opacity:.9} }
+.ripple { position:absolute; border-radius:50%; background:rgba(12,21,25,0.3); transform:scale(0); animation:rgo 0.6s ease-out forwards; pointer-events:none; }
+@keyframes rgo { to { transform:scale(6); opacity:0; } }
+.dots { position:fixed; bottom:calc(var(--safe-bot) + 10px); left:50%; transform:translateX(-50%); display:flex; gap:7px; z-index:200; }
+.dot { width:6px; height:6px; border-radius:50%; background:rgba(207,157,123,0.2); cursor:pointer; transition:all 0.3s; border:none; padding:0; }
+.dot.on { background:var(--brass); width:20px; border-radius:3px; }
+</style>
+</head>
+<body>
+
+<!-- ═══ S1: APP STORE SEARCH ═══════════════════════════ -->
+<div class="scr on" id="s1">
+  <div class="sb" style="color:#000;background:#F2F2F7;">
+    <span style="color:#000;">9:41</span>
+    <div class="sb-icons" style="color:#000;">
+      <svg width="17" height="13" viewBox="0 0 17 13" fill="none"><rect x="0" y="8" width="3" height="5" rx="1" fill="black" opacity="0.4"/><rect x="4.5" y="5.5" width="3" height="7.5" rx="1" fill="black" opacity="0.6"/><rect x="9" y="3" width="3" height="10" rx="1" fill="black" opacity="0.8"/><rect x="13.5" y="0" width="3" height="13" rx="1" fill="black"/></svg>
+      <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><path d="M8 2.5C10 2.5 11.8 3.3 13.1 4.6L14.5 3.2C12.8 1.5 10.5 0.5 8 0.5S3.2 1.5 1.5 3.2L2.9 4.6C4.2 3.3 6 2.5 8 2.5Z" fill="black"/><path d="M8 5.5C9.3 5.5 10.5 6 11.4 6.9L12.8 5.5C11.5 4.2 9.8 3.5 8 3.5S4.5 4.2 3.2 5.5L4.6 6.9C5.5 6 6.7 5.5 8 5.5Z" fill="black"/><circle cx="8" cy="9.5" r="1.5" fill="black"/></svg>
+    </div>
+  </div>
+
+  <div class="as-nav">
+    <div style="font-size:22px;font-weight:800;color:#000;margin-bottom:10px;">Search</div>
+    <div class="as-search-bar">
+      <svg class="as-search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="5" stroke="#000" stroke-width="1.5"/><path d="M10.5 10.5L14 14" stroke="#000" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <span class="as-search-text">heirlo<span class="as-search-cursor"></span></span>
+    </div>
+  </div>
+
+  <div class="as-body">
+    <div class="as-section-title">Top Result</div>
+    <div class="as-result-card" onclick="goDownload()">
+      <div class="as-app-icon">
+        <svg class="as-icon-halo" viewBox="0 0 80 24">
+          <defs><filter id="ag" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+          <ellipse cx="40" cy="12" rx="36" ry="9" fill="none" stroke="#CF9D7B" stroke-width="2.5" filter="url(#ag)"/>
+        </svg>
+        <span class="as-icon-h">H</span>
+      </div>
+      <div class="as-app-info">
+        <div class="as-app-name">Heirlo</div>
+        <div class="as-app-cat">Lifestyle · Estate Planning</div>
+        <div class="as-app-stars">★★★★★ · 4.9 · Legacy, clarified.</div>
+      </div>
+      <button class="as-get-btn" onclick="goDownload()">GET</button>
+    </div>
+
+    <div class="as-section-title">Preview</div>
+    <div class="as-screenshots">
+      <!-- Screenshot mockups -->
+      <div class="as-ss" style="background:var(--black);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;">
+        <div style="font-family:'Fraunces',serif;font-size:18px;font-weight:900;color:var(--brass);letter-spacing:0.04em;">HEIRLO</div>
+        <div style="font-size:9px;color:var(--muted);text-align:center;padding:0 10px;line-height:1.5;">Document what you love</div>
+      </div>
+      <div class="as-ss" style="background:var(--jungle);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:12px;">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="15" stroke="#CF9D7B" stroke-width="2" fill="none"/><circle cx="20" cy="20" r="9" stroke="#724B39" stroke-width="1" fill="none" stroke-dasharray="4 3"/><circle cx="20" cy="5" r="2.5" fill="#CF9D7B"/><circle cx="20" cy="35" r="2.5" fill="#CF9D7B"/></svg>
+        <div style="font-size:9px;color:var(--muted);text-align:center;line-height:1.5;">Assign recipients</div>
+      </div>
+      <div class="as-ss" style="background:var(--black);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:12px;">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M8 16L14 22L24 12" stroke="#CF9D7B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div style="font-size:9px;color:var(--muted);text-align:center;line-height:1.5;">Acknowledgment recorded</div>
+      </div>
+    </div>
+
+    <div style="background:#fff;border-radius:16px;padding:16px;margin-top:16px;box-shadow:0 1px 6px rgba(0,0,0,0.07);">
+      <div style="font-size:13px;font-weight:700;color:#000;margin-bottom:6px;">About Heirlo</div>
+      <div style="font-size:13px;color:#666;line-height:1.65;">Heirlo helps you document your belongings, assign them to the people who matter, and create a clear record — so nothing is lost, disputed, or forgotten. Generate a legally recognised Personal Property Memorandum in minutes.</div>
+      <div style="font-size:12px;color:#999;margin-top:8px;">Free · In-app purchase for PPM document</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S2: DOWNLOADING ════════════════════════════════ -->
+<div class="scr" id="s2" style="background:#F2F2F7;">
+  <div class="sb" style="color:#000;background:#F2F2F7;">
+    <span style="color:#000;">9:41</span>
+  </div>
+  <div style="flex:1;display:flex;align-items:center;justify-content:center;">
+    <div class="dl-wrap">
+      <div class="dl-icon">
+        <svg class="dl-icon-halo" viewBox="0 0 80 24">
+          <ellipse cx="40" cy="12" rx="36" ry="9" fill="none" stroke="#CF9D7B" stroke-width="2.5" opacity="0.6"/>
+        </svg>
+        <span class="dl-icon-h">H</span>
+      </div>
+      <div class="dl-name">HEIRLO</div>
+      <div class="dl-ring-wrap">
+        <div class="dl-ring-bg"></div>
+        <div class="dl-ring-fill" id="dl-ring"></div>
+      </div>
+      <div class="dl-label" id="dl-label">Downloading...</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S3: APP OPEN / WELCOME ═════════════════════════ -->
+<div class="scr" id="s3">
+  <div class="s3-glow"></div>
+  <div class="sb" style="color:var(--brass);">
+    <span>9:41</span>
+    <div class="sb-icons">
+      <svg width="17" height="13" viewBox="0 0 17 13" fill="none"><rect x="0" y="8" width="3" height="5" rx="1" fill="#CF9D7B" opacity="0.4"/><rect x="4.5" y="5.5" width="3" height="7.5" rx="1" fill="#CF9D7B" opacity="0.6"/><rect x="9" y="3" width="3" height="10" rx="1" fill="#CF9D7B" opacity="0.8"/><rect x="13.5" y="0" width="3" height="13" rx="1" fill="#CF9D7B"/></svg>
+    </div>
+  </div>
+  <div class="s3-body">
+    <div style="position:relative;margin-bottom:8px;">
+      <svg class="s3-halo" viewBox="0 0 120 32">
+        <defs><filter id="wg" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+        <ellipse cx="60" cy="16" rx="55" ry="11" fill="none" stroke="#CF9D7B" stroke-width="3" filter="url(#wg)"/>
+      </svg>
+      <div class="s3-wordmark">HEIR<span class="s3-l">L</span><span class="s3-o">O</span></div>
+    </div>
+    <div class="s3-tag">Legacy, clarified.</div>
+    <button class="s3-cta" onclick="go(3)">Get Started — It's Free</button>
+    <button class="s3-secondary" onclick="go(3)">I already have an account</button>
+    <div class="s3-legal">By continuing you agree to our Terms of Service and Privacy Policy. Heirlo is a documentation platform, not a law firm.</div>
+  </div>
+</div>
+
+<!-- ═══ S4: DASHBOARD (empty) ══════════════════════════ -->
+<div class="scr" id="s4">
+  <div class="dash-nav">
+    <div class="dash-wordmark">HEIR<span class="dash-l">L</span><span class="dash-o">O</span></div>
+    <div class="dash-add-btn" onclick="go(4)">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3V13M3 8H13" stroke="#0C1519" stroke-width="2" stroke-linecap="round"/></svg>
+    </div>
+  </div>
+  <div class="dash-scroll">
+    <div class="dash-greeting">Your Vault</div>
+    <div class="dash-sub">Document what you love. Assign who receives it.</div>
+    <div class="dash-empty">
+      <div class="dash-empty-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="8" height="8" rx="1.5" stroke="#CF9D7B" stroke-width="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5" stroke="#CF9D7B" stroke-width="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5" stroke="#CF9D7B" stroke-width="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5" stroke="#CF9D7B" stroke-width="1.5"/></svg>
+      </div>
+      <div class="dash-empty-title">Your vault is empty</div>
+      <div class="dash-empty-body">Add your first item — jewellery, heirlooms, a pet, keepsakes. Anything that matters and has someone to go to.</div>
+      <button class="dash-first-btn" onclick="go(4)">Add Your First Item</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S5: ADD ITEM FORM ══════════════════════════════ -->
+<div class="scr" id="s5">
+  <div class="form-nav">
+    <div class="form-back" onclick="go(3)">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8L10 4" stroke="#CF9D7B" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/></svg>
+    </div>
+    <span class="form-title">New Item</span>
+  </div>
+
+  <div class="form-scroll">
+    <!-- Photo zone — shows bangle illustration when "filled" -->
+    <div class="form-photo-zone has-photo" id="photo-zone" onclick="go(5)">
+      <div class="photo-preview">
+        <div style="position:absolute;inset:0;background:radial-gradient(circle at 50%,rgba(207,157,123,0.09),transparent 65%);"></div>
+        <svg width="80" height="80" viewBox="0 0 80 80" fill="none" style="position:relative;z-index:1;opacity:0.75">
+          <circle cx="40" cy="40" r="30" stroke="#CF9D7B" stroke-width="3.5" fill="none"/>
+          <circle cx="40" cy="40" r="20" stroke="#724B39" stroke-width="1.5" fill="none" stroke-dasharray="5 4" opacity="0.7"/>
+          <circle cx="40" cy="10" r="4.5" fill="#CF9D7B"/>
+          <circle cx="40" cy="70" r="4.5" fill="#CF9D7B"/>
+          <circle cx="10" cy="40" r="4.5" fill="#CF9D7B"/>
+          <circle cx="70" cy="40" r="4.5" fill="#CF9D7B"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Item Name</label>
+      <div class="form-input filled" style="color:var(--brass);">Mum's Gold Bangles</div>
+    </div>
+
+    <div class="form-input-row">
+      <div class="form-group">
+        <label class="form-label">Category</label>
+        <div class="form-input filled" style="color:var(--brass);">Jewellery</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Est. Value</label>
+        <div class="form-input filled" style="color:var(--brass);">—</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Description</label>
+      <div class="form-textarea filled" style="color:var(--brass);">22kt gold bangles, set of 4. Inherited from grandmother. In the family since 1962.</div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Assign To</label>
+      <div style="display:flex;flex-wrap:wrap;margin-top:2px;">
+        <div class="recipient-pill selected">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="3.5" r="2" stroke="#CF9D7B" stroke-width="1.2"/><path d="M1 9C1 7.3 2.8 6 5 6C7.2 6 9 7.3 9 9" stroke="#CF9D7B" stroke-width="1.2" stroke-linecap="round"/></svg>
+          Priya
+        </div>
+        <div class="recipient-pill">+ Add recipient</div>
+      </div>
+    </div>
+
+    <div class="form-group" style="margin-bottom:24px;">
+      <label class="form-label">Personal Message</label>
+      <div class="form-textarea filled" style="color:var(--brass);">"These were my grandmother's, passed to my mother, and now I want them with you."</div>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <button class="form-save-btn" id="save-btn" onclick="doSave(event)">
+      Save Item &amp; Notify Recipient
+    </button>
+  </div>
+</div>
+
+<!-- ═══ S6: VAULT WITH ITEM ════════════════════════════ -->
+<div class="scr" id="s6">
+  <div class="dash-nav">
+    <div class="dash-wordmark">HEIR<span class="dash-l">L</span><span class="dash-o">O</span></div>
+    <div class="dash-add-btn" onclick="go(4)">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3V13M3 8H13" stroke="#0C1519" stroke-width="2" stroke-linecap="round"/></svg>
+    </div>
+  </div>
+  <div class="dash-scroll">
+    <div class="dash-greeting">Your Vault</div>
+    <div class="dash-sub" style="margin-bottom:16px;">1 item · 1 recipient notified</div>
+
+    <div class="item-card">
+      <div class="item-card-photo">
+        <div class="item-card-glow"></div>
+        <svg width="80" height="80" viewBox="0 0 80 80" fill="none" style="position:relative;z-index:1;opacity:0.8">
+          <circle cx="40" cy="40" r="30" stroke="#CF9D7B" stroke-width="3.5" fill="none"/>
+          <circle cx="40" cy="40" r="20" stroke="#724B39" stroke-width="1.5" fill="none" stroke-dasharray="5 4" opacity="0.7"/>
+          <circle cx="40" cy="10" r="4.5" fill="#CF9D7B"/>
+          <circle cx="40" cy="70" r="4.5" fill="#CF9D7B"/>
+          <circle cx="10" cy="40" r="4.5" fill="#CF9D7B"/>
+          <circle cx="70" cy="40" r="4.5" fill="#CF9D7B"/>
+        </svg>
+      </div>
+      <div class="item-card-info">
+        <div class="item-card-tag">Jewellery</div>
+        <div class="item-card-name">Mum's Gold Bangles</div>
+        <div style="margin-bottom:8px;">
+          <span class="item-card-assigned">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="3.5" r="2" stroke="#CF9D7B" stroke-width="1.2"/><path d="M1 9C1 7.3 2.8 6 5 6C7.2 6 9 7.3 9 9" stroke="#CF9D7B" stroke-width="1.2" stroke-linecap="round"/></svg>
+            Assigned to Priya
+          </span>
+        </div>
+        <div class="item-card-msg">"These were my grandmother's, passed to my mother, and now I want them with you."</div>
+        <div class="item-status-row">
+          <div class="status-dot pending"></div>
+          <span class="status-text">Notification sent · Awaiting acknowledgment</span>
+        </div>
+      </div>
+    </div>
+
+    <button class="dash-gen-btn">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="14" rx="2" stroke="#CF9D7B" stroke-width="1.3"/><path d="M5 6H11M5 9H11M5 12H8" stroke="#CF9D7B" stroke-width="1.3" stroke-linecap="round"/></svg>
+      Generate PPM Document
+    </button>
+
+    <div style="height:calc(var(--safe-bot) + 60px);"></div>
+  </div>
+</div>
+
+<!-- Dots -->
+<div class="dots">
+  <button class="dot on" onclick="go(0)"></button>
+  <button class="dot" onclick="go(1)"></button>
+  <button class="dot" onclick="go(2)"></button>
+  <button class="dot" onclick="go(3)"></button>
+  <button class="dot" onclick="go(4)"></button>
+  <button class="dot" onclick="go(5)"></button>
+</div>
+
+<script>
+var cur = 0;
+var ids = ['s1','s2','s3','s4','s5','s6'];
+
+function go(n) {
+  if (n === cur) return;
+  document.getElementById(ids[cur]).classList.remove('on');
+  cur = n;
+  document.getElementById(ids[cur]).classList.add('on');
+  document.querySelectorAll('.dot').forEach(function(d,i){ d.classList.toggle('on', i===cur); });
+  // Reset download ring on s2
+  if (n === 1) {
+    var r = document.getElementById('dl-ring');
+    var l = document.getElementById('dl-label');
+    if (r) { r.style.animation='none'; void r.offsetWidth; r.style.animation=''; }
+    if (l) { l.textContent='Downloading...'; }
+    setTimeout(function(){ if(l) l.textContent='Installing...'; }, 800);
+    setTimeout(function(){ if(l) l.textContent='Ready'; }, 1400);
+    setTimeout(function(){ if(cur===1) go(2); }, 1800);
+  }
+}
+
+function goDownload() { go(1); }
+
+function doSave(e) {
+  var btn = document.getElementById('save-btn');
+  var rect = btn.getBoundingClientRect();
+  var r = document.createElement('span');
+  r.className = 'ripple';
+  var sz = Math.max(rect.width, rect.height) * 2;
+  var cx = ((e.touches ? e.touches[0].clientX : e.clientX) || rect.left+rect.width/2) - rect.left - sz/2;
+  var cy = ((e.touches ? e.touches[0].clientY : e.clientY) || rect.top+rect.height/2) - rect.top - sz/2;
+  r.style.cssText = 'width:'+sz+'px;height:'+sz+'px;left:'+cx+'px;top:'+cy+'px;';
+  btn.appendChild(r);
+  btn.textContent = 'Saved ✓  Priya notified';
+  btn.style.background = '#8B5E3C';
+  setTimeout(function(){ r.remove(); go(5); }, 700);
+}
+
+// Swipe
+var tx = 0;
+document.addEventListener('touchstart', function(e){ tx = e.touches[0].clientX; }, {passive:true});
+document.addEventListener('touchend', function(e) {
+  var dx = e.changedTouches[0].clientX - tx;
+  if (Math.abs(dx) > 55) {
+    if (dx < 0 && cur < 5) go(cur+1);
+    else if (dx > 0 && cur > 0) go(cur-1);
+  }
+}, {passive:true});
+
+// Keyboard
+document.addEventListener('keydown', function(e) {
+  if (e.key==='ArrowRight' && cur<5) go(cur+1);
+  if (e.key==='ArrowLeft' && cur>0) go(cur-1);
+});
+</script>
+</body>
+</html>
