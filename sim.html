@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Heirlo — App Simulation</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --void:#06020f;
+  --deep:#0d0820;
+  --card:#1a1635;
+  --card2:#221e40;
+  --teal:#00c9a7;
+  --teal-dim:rgba(0,201,167,0.15);
+  --teal-glow:rgba(0,201,167,0.3);
+  --purple:#8b7cf8;
+  --purple-dim:rgba(139,124,248,0.2);
+  --amber:#f0a500;
+  --text:#f0ecff;
+  --text2:rgba(240,236,255,0.65);
+  --text3:rgba(240,236,255,0.38);
+  --rule:rgba(255,255,255,0.08);
+}
+
+body{
+  background:#0a0812;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:'DM Sans',sans-serif;
+  overflow:hidden;
+  position:relative;
+}
+
+/* Ambient background glow */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 60% 50% at 30% 50%, rgba(0,201,167,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 60% at 70% 50%, rgba(139,124,248,0.05) 0%, transparent 60%);
+  pointer-events:none;
+}
+
+/* ── PHONE FRAME ── */
+.phone-wrap{
+  position:relative;
+  width:375px;
+  height:812px;
+  filter:drop-shadow(0 40px 80px rgba(0,0,0,0.7)) drop-shadow(0 0 40px rgba(0,201,167,0.08));
+}
+
+.phone-frame{
+  position:absolute;inset:0;
+  background:linear-gradient(160deg, #1c1a2e 0%, #0f0d1e 100%);
+  border-radius:50px;
+  border:1.5px solid rgba(255,255,255,0.12);
+  overflow:hidden;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,0.5);
+}
+
+/* Side buttons */
+.phone-btn-vol{position:absolute;left:-2px;top:160px;width:3px;height:34px;background:#1a1a2e;border-radius:2px 0 0 2px;}
+.phone-btn-vol2{position:absolute;left:-2px;top:204px;width:3px;height:34px;background:#1a1a2e;border-radius:2px 0 0 2px;}
+.phone-btn-pwr{position:absolute;right:-2px;top:180px;width:3px;height:60px;background:#1a1a2e;border-radius:0 2px 2px 0;}
+
+/* Notch */
+.notch{
+  position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:150px;height:34px;
+  background:#0a0812;
+  border-radius:0 0 22px 22px;
+  z-index:100;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.notch-cam{width:12px;height:12px;border-radius:50%;background:#1a1635;border:1px solid rgba(255,255,255,0.05);}
+.notch-bar{width:50px;height:5px;border-radius:10px;background:#1a1635;}
+
+/* Status bar */
+.status-bar{
+  position:absolute;top:0;left:0;right:0;height:50px;
+  display:flex;align-items:flex-end;justify-content:space-between;
+  padding:0 28px 8px;
+  z-index:99;
+  font-family:'DM Mono',monospace;
+  font-size:12px;font-weight:500;
+  color:var(--text);
+}
+.status-icons{display:flex;align-items:center;gap:5px;}
+.sig-bar{display:flex;align-items:flex-end;gap:1.5px;}
+.sig-bar span{width:3px;background:var(--text);border-radius:1px;}
+
+/* ── SCREENS ── */
+.screen{
+  position:absolute;inset:0;
+  background:var(--void);
+  border-radius:50px;
+  overflow:hidden;
+  opacity:0;pointer-events:none;
+  transition:opacity 0.4s ease;
+}
+.screen.active{opacity:1;pointer-events:all;}
+
+/* ── SCREEN 1: LOCK SCREEN + NOTIFICATION ── */
+#screen-lock{
+  background:linear-gradient(160deg, #0d0820 0%, #06020f 100%);
+}
+.lock-bg-glow{
+  position:absolute;
+  width:400px;height:400px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(0,201,167,0.08) 0%, transparent 70%);
+  top:50%;left:50%;transform:translate(-50%,-60%);
+}
+.lock-time{
+  position:absolute;top:120px;left:0;right:0;text-align:center;
+}
+.lock-time-h{
+  font-family:'Cormorant Garamond',serif;
+  font-size:80px;font-weight:300;
+  color:var(--text);line-height:1;
+  letter-spacing:-2px;
+}
+.lock-time-date{
+  font-size:16px;color:var(--text2);margin-top:8px;
+  font-weight:300;letter-spacing:0.05em;
+}
+
+.notification-banner{
+  position:absolute;top:60px;left:16px;right:16px;
+  background:rgba(20,16,40,0.92);
+  backdrop-filter:blur(20px);
+  border:1px solid rgba(0,201,167,0.25);
+  border-radius:18px;
+  padding:14px 16px;
+  display:flex;gap:12px;align-items:flex-start;
+  cursor:pointer;
+  transform:translateY(-120px);
+  opacity:0;
+  transition:transform 0.5s cubic-bezier(0.34,1.56,0.64,1), opacity 0.4s ease;
+  box-shadow:0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,201,167,0.1);
+}
+.notification-banner.show{transform:translateY(0);opacity:1;}
+.notif-icon{
+  width:40px;height:40px;border-radius:10px;
+  background:linear-gradient(135deg, #0d0820 0%, #1a1635 100%);
+  border:1px solid rgba(0,201,167,0.3);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.notif-icon-text{
+  font-family:'Cormorant Garamond',serif;
+  font-size:20px;font-weight:500;
+  color:var(--teal);letter-spacing:0.05em;
+}
+.notif-content{flex:1;}
+.notif-app{
+  font-size:11px;font-weight:500;
+  color:var(--teal);
+  letter-spacing:0.12em;text-transform:uppercase;
+  margin-bottom:3px;
+  font-family:'DM Mono',monospace;
+}
+.notif-title{
+  font-size:14px;font-weight:500;
+  color:var(--text);margin-bottom:3px;
+  line-height:1.3;
+}
+.notif-body{
+  font-size:12px;color:var(--text2);
+  line-height:1.5;
+}
+.notif-time{
+  font-size:11px;color:var(--text3);
+  font-family:'DM Mono',monospace;
+  flex-shrink:0;margin-top:2px;
+}
+.lock-swipe{
+  position:absolute;bottom:50px;left:0;right:0;
+  text-align:center;font-size:13px;color:var(--text3);
+  letter-spacing:0.15em;text-transform:uppercase;
+  font-family:'DM Mono',monospace;
+  animation:pulse-opacity 2s ease-in-out infinite;
+}
+@keyframes pulse-opacity{0%,100%{opacity:0.4}50%{opacity:0.9}}
+
+/* ── SCREEN 2: EMAIL VIEW ── */
+#screen-email{
+  background:#f4f2ee;
+  border-radius:50px;
+}
+.email-header{
+  padding:60px 24px 20px;
+  background:linear-gradient(180deg,#fff 0%,#f4f2ee 100%);
+  border-bottom:1px solid #e8e4dc;
+}
+.email-from{
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:16px;
+}
+.email-avatar{
+  width:40px;height:40px;border-radius:50%;
+  background:linear-gradient(135deg,#0d0820,#1a1635);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Cormorant Garamond',serif;
+  font-size:16px;color:#00c9a7;font-weight:500;
+  flex-shrink:0;
+}
+.email-from-info{flex:1;}
+.email-sender{font-size:13px;font-weight:500;color:#1a1a1a;}
+.email-addr{font-size:11px;color:#888;font-family:'DM Mono',monospace;}
+.email-time-badge{font-size:11px;color:#999;font-family:'DM Mono',monospace;}
+.email-subject{
+  font-size:18px;font-weight:500;color:#1a1a1a;
+  font-family:'Cormorant Garamond',serif;
+  line-height:1.3;
+}
+.email-body{
+  padding:24px;overflow-y:auto;
+  max-height:600px;
+}
+.email-greeting{
+  font-size:15px;color:#333;margin-bottom:16px;
+  line-height:1.6;
+}
+.email-item-card{
+  background:#fff;
+  border:1px solid #e8e4dc;
+  border-radius:16px;
+  padding:20px;
+  margin:20px 0;
+  box-shadow:0 2px 12px rgba(0,0,0,0.06);
+}
+.email-item-label{
+  font-size:10px;letter-spacing:0.18em;text-transform:uppercase;
+  color:#999;margin-bottom:8px;
+  font-family:'DM Mono',monospace;
+}
+.email-item-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:24px;font-weight:400;color:#1a1a1a;
+  margin-bottom:4px;
+}
+.email-item-from{font-size:13px;color:#666;margin-bottom:16px;}
+.email-item-from span{color:#1a1635;font-weight:500;}
+.email-item-photo{
+  width:100%;height:140px;
+  background:linear-gradient(135deg,#f0ece4 0%,#e8e2d8 100%);
+  border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:16px;
+  position:relative;overflow:hidden;
+}
+.email-item-photo-inner{
+  text-align:center;
+}
+.email-item-photo svg{width:48px;height:48px;opacity:0.3;}
+.email-item-photo-label{font-size:11px;color:#999;margin-top:8px;font-family:'DM Mono',monospace;}
+.email-message{
+  background:#f9f7f4;border-radius:10px;padding:14px;
+  font-size:13px;color:#555;line-height:1.65;
+  font-style:italic;border-left:3px solid #d4cfc5;
+  margin-bottom:16px;
+}
+.email-cta-btn{
+  display:block;width:100%;
+  background:linear-gradient(135deg,#0d0820 0%,#1a1635 100%);
+  color:#fff;border:none;border-radius:12px;
+  padding:16px;
+  font-size:15px;font-weight:500;
+  font-family:'DM Sans',sans-serif;
+  cursor:pointer;text-align:center;
+  letter-spacing:0.02em;
+  transition:opacity 0.2s, transform 0.15s;
+  box-shadow:0 4px 16px rgba(10,8,18,0.3);
+  position:relative;overflow:hidden;
+}
+.email-cta-btn::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(0,201,167,0.15) 0%,transparent 60%);
+}
+.email-cta-btn:active{transform:scale(0.98);}
+.email-footer{
+  font-size:11px;color:#aaa;text-align:center;
+  margin-top:16px;line-height:1.6;
+}
+.email-decline{
+  display:block;width:100%;
+  background:transparent;border:1px solid #e8e4dc;
+  color:#999;border-radius:12px;
+  padding:14px;font-size:14px;
+  font-family:'DM Sans',sans-serif;
+  cursor:pointer;text-align:center;
+  margin-top:10px;
+  transition:all 0.2s;
+}
+.email-decline:active{background:#f4f2ee;}
+
+/* ── SCREEN 3: ACKNOWLEDGMENT / ACCEPT ── */
+#screen-ack{
+  background:linear-gradient(160deg,#0d0820 0%,#06020f 100%);
+  display:flex;flex-direction:column;
+}
+.ack-header{
+  padding:60px 24px 20px;
+  display:flex;align-items:center;gap:12px;
+  border-bottom:1px solid var(--rule);
+}
+.ack-back{
+  width:36px;height:36px;border-radius:50%;
+  background:rgba(255,255,255,0.06);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  border:1px solid var(--rule);
+  flex-shrink:0;
+}
+.ack-header-title{
+  font-size:16px;font-weight:500;color:var(--text);
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+}
+.ack-body{
+  flex:1;padding:24px;overflow-y:auto;
+  display:flex;flex-direction:column;gap:20px;
+}
+.ack-from-pill{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--teal-dim);
+  border:1px solid rgba(0,201,167,0.2);
+  border-radius:20px;padding:6px 14px;
+  font-size:12px;color:var(--teal);
+  font-family:'DM Mono',monospace;letter-spacing:0.08em;
+  width:fit-content;
+}
+.ack-headline{
+  font-family:'Cormorant Garamond',serif;
+  font-size:28px;font-weight:300;
+  color:var(--text);line-height:1.2;
+}
+.ack-headline em{color:var(--teal);font-style:italic;}
+.ack-item-card{
+  background:var(--card);
+  border:1px solid rgba(0,201,167,0.15);
+  border-radius:20px;
+  overflow:hidden;
+}
+.ack-item-photo{
+  width:100%;height:180px;
+  background:linear-gradient(135deg,#1a1635 0%,#221e40 100%);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+}
+/* Jewelry illustration */
+.jewelry-svg{width:80px;height:80px;opacity:0.7;}
+.ack-item-photo-glow{
+  position:absolute;inset:0;
+  background:radial-gradient(circle at 50% 50%, rgba(0,201,167,0.08) 0%, transparent 70%);
+}
+.ack-item-info{padding:18px;}
+.ack-item-label{
+  font-size:10px;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--teal);margin-bottom:6px;
+  font-family:'DM Mono',monospace;
+}
+.ack-item-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px;font-weight:400;color:var(--text);
+  margin-bottom:4px;
+}
+.ack-item-desc{font-size:13px;color:var(--text2);line-height:1.5;}
+.ack-note-card{
+  background:var(--card);border:1px solid var(--rule);
+  border-radius:16px;padding:18px;
+}
+.ack-note-label{
+  font-size:10px;letter-spacing:0.15em;text-transform:uppercase;
+  color:var(--text3);margin-bottom:8px;
+  font-family:'DM Mono',monospace;
+}
+.ack-note-text{
+  font-family:'Cormorant Garamond',serif;
+  font-size:17px;font-weight:300;font-style:italic;
+  color:var(--text2);line-height:1.6;
+}
+.ack-legal{
+  background:rgba(255,255,255,0.03);border:1px solid var(--rule);
+  border-radius:12px;padding:14px;
+  font-size:11px;color:var(--text3);
+  line-height:1.6;
+}
+.ack-legal strong{color:var(--text2);}
+.ack-actions{
+  padding:20px 24px;
+  display:flex;flex-direction:column;gap:10px;
+  border-top:1px solid var(--rule);
+  padding-bottom:40px;
+}
+.ack-accept-btn{
+  width:100%;padding:18px;
+  background:var(--teal);
+  color:#06020f;border:none;border-radius:14px;
+  font-size:16px;font-weight:500;
+  font-family:'DM Sans',sans-serif;
+  cursor:pointer;
+  transition:all 0.2s;
+  position:relative;overflow:hidden;
+}
+.ack-accept-btn:active{transform:scale(0.98);}
+.ack-decline-btn{
+  width:100%;padding:15px;
+  background:transparent;
+  border:1px solid var(--rule);
+  color:var(--text3);border-radius:14px;
+  font-size:14px;font-family:'DM Sans',sans-serif;
+  cursor:pointer;
+  transition:all 0.2s;
+}
+
+/* ── SCREEN 4: CONFIRMATION ── */
+#screen-confirm{
+  background:linear-gradient(160deg,#061a14 0%,#06020f 100%);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:40px 32px;
+  text-align:center;
+}
+.confirm-ring{
+  width:120px;height:120px;border-radius:50%;
+  background:rgba(0,201,167,0.1);
+  border:1px solid rgba(0,201,167,0.3);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:32px;
+  position:relative;
+}
+.confirm-ring::before{
+  content:'';position:absolute;
+  width:100px;height:100px;border-radius:50%;
+  border:1px solid rgba(0,201,167,0.15);
+  animation:ring-pulse 2.5s ease-in-out infinite;
+}
+.confirm-ring::after{
+  content:'';position:absolute;
+  width:140px;height:140px;border-radius:50%;
+  border:1px solid rgba(0,201,167,0.07);
+  animation:ring-pulse 2.5s ease-in-out infinite 0.5s;
+}
+@keyframes ring-pulse{
+  0%,100%{transform:scale(1);opacity:0.6}
+  50%{transform:scale(1.1);opacity:0.2}
+}
+.confirm-check svg{width:52px;height:52px;}
+.confirm-headline{
+  font-family:'Cormorant Garamond',serif;
+  font-size:32px;font-weight:300;color:var(--text);
+  line-height:1.2;margin-bottom:12px;
+}
+.confirm-headline em{color:var(--teal);font-style:italic;}
+.confirm-sub{
+  font-size:14px;color:var(--text2);
+  line-height:1.7;margin-bottom:32px;
+  max-width:280px;
+}
+.confirm-timestamp{
+  background:var(--card);border:1px solid var(--rule);
+  border-radius:12px;padding:14px 20px;
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:32px;width:100%;
+}
+.confirm-ts-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--teal);flex-shrink:0;
+  animation:pulse-opacity 2s ease-in-out infinite;
+}
+.confirm-ts-text{
+  font-family:'DM Mono',monospace;
+  font-size:11px;color:var(--text2);
+  text-align:left;line-height:1.5;
+}
+.confirm-brand{
+  font-family:'Cormorant Garamond',serif;
+  font-size:20px;font-weight:300;
+  color:rgba(255,255,255,0.15);
+  letter-spacing:0.2em;margin-top:16px;
+}
+.confirm-tagline{
+  font-size:11px;color:var(--text3);
+  font-style:italic;margin-top:4px;
+  font-family:'Cormorant Garamond',serif;
+}
+
+/* ── NAVIGATION DOTS ── */
+.nav-dots{
+  position:fixed;bottom:32px;left:50%;transform:translateX(-50%);
+  display:flex;gap:8px;z-index:200;
+}
+.nav-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:rgba(255,255,255,0.2);
+  cursor:pointer;transition:all 0.3s;
+}
+.nav-dot.active{background:var(--teal);width:20px;border-radius:3px;}
+
+/* ── DEMO LABEL ── */
+.demo-label{
+  position:fixed;top:24px;left:50%;transform:translateX(-50%);
+  background:rgba(0,0,0,0.6);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:20px;padding:6px 16px;
+  font-size:11px;letter-spacing:0.15em;text-transform:uppercase;
+  color:rgba(255,255,255,0.4);
+  font-family:'DM Mono',monospace;
+  z-index:200;
+  white-space:nowrap;
+}
+
+/* ── ANIMATION CLASSES ── */
+.slide-up{animation:slideUp 0.4s cubic-bezier(0.34,1.2,0.64,1) forwards;}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+.fade-in{animation:fadeIn 0.4s ease forwards;}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* Ripple */
+.ripple{
+  position:absolute;border-radius:50%;
+  background:rgba(0,201,167,0.3);
+  transform:scale(0);
+  animation:ripple-out 0.5s ease-out forwards;
+  pointer-events:none;
+}
+@keyframes ripple-out{to{transform:scale(4);opacity:0}}
+
+/* ── CHECK ANIMATION ── */
+.check-path{
+  stroke-dasharray:100;
+  stroke-dashoffset:100;
+  animation:draw-check 0.6s cubic-bezier(0.34,1.2,0.64,1) 0.3s forwards;
+}
+@keyframes draw-check{to{stroke-dashoffset:0}}
+</style>
+</head>
+<body>
+
+<div class="demo-label" id="demo-label">Recipient · Notification View</div>
+
+<div class="phone-wrap">
+  <!-- Physical buttons -->
+  <div class="phone-btn-vol"></div>
+  <div class="phone-btn-vol2"></div>
+  <div class="phone-btn-pwr"></div>
+
+  <div class="phone-frame">
+
+    <!-- SCREEN 1: LOCK SCREEN -->
+    <div class="screen active" id="screen-lock">
+      <div class="lock-bg-glow"></div>
+      <div class="notch">
+        <div class="notch-cam"></div>
+        <div class="notch-bar"></div>
+      </div>
+      <div class="status-bar">
+        <span>9:41</span>
+        <div class="status-icons">
+          <div class="sig-bar">
+            <span style="height:4px"></span><span style="height:7px"></span>
+            <span style="height:10px"></span><span style="height:13px"></span>
+          </div>
+          <svg width="15" height="12" viewBox="0 0 15 12" fill="none">
+            <path d="M7.5 2.5C9.5 2.5 11.3 3.3 12.6 4.6L14 3.2C12.3 1.5 10 0.5 7.5 0.5C5 0.5 2.7 1.5 1 3.2L2.4 4.6C3.7 3.3 5.5 2.5 7.5 2.5Z" fill="currentColor"/>
+            <path d="M7.5 5.5C8.8 5.5 10 6 10.9 6.9L12.3 5.5C11 4.2 9.3 3.5 7.5 3.5C5.7 3.5 4 4.2 2.7 5.5L4.1 6.9C5 6 6.2 5.5 7.5 5.5Z" fill="currentColor"/>
+            <circle cx="7.5" cy="9.5" r="1.5" fill="currentColor"/>
+          </svg>
+          <svg width="24" height="12" viewBox="0 0 24 12" fill="none">
+            <rect x="0.5" y="0.5" width="20" height="11" rx="3.5" stroke="currentColor" stroke-opacity="0.35"/>
+            <rect x="2" y="2" width="15" height="8" rx="2" fill="currentColor"/>
+            <path d="M22 4.5V7.5C22.8 7.2 23.5 6.4 23.5 6C23.5 5.6 22.8 4.8 22 4.5Z" fill="currentColor" fill-opacity="0.4"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="lock-time">
+        <div class="lock-time-h">9:41</div>
+        <div class="lock-time-date">Wednesday, April 8</div>
+      </div>
+
+      <div class="notification-banner" id="notif-banner" onclick="goToEmail()">
+        <div class="notif-icon">
+          <span class="notif-icon-text">H</span>
+        </div>
+        <div class="notif-content">
+          <div class="notif-app">Heirlo</div>
+          <div class="notif-title">Someone left you something</div>
+          <div class="notif-body">Malika B. has assigned you an item from her Heirlo vault. Tap to view.</div>
+        </div>
+        <div class="notif-time">now</div>
+      </div>
+
+      <div class="lock-swipe">Tap notification to view</div>
+    </div>
+
+    <!-- SCREEN 2: EMAIL / NOTIFICATION VIEW -->
+    <div class="screen" id="screen-email">
+      <div class="notch" style="background:#f4f2ee;">
+        <div class="notch-cam" style="background:#e8e4dc;"></div>
+        <div class="notch-bar" style="background:#e8e4dc;"></div>
+      </div>
+      <div class="status-bar" style="color:#333;">
+        <span>9:41</span>
+        <div class="status-icons" style="color:#333;">
+          <div class="sig-bar">
+            <span style="height:4px;background:#333;"></span>
+            <span style="height:7px;background:#333;"></span>
+            <span style="height:10px;background:#333;"></span>
+            <span style="height:13px;background:#333;"></span>
+          </div>
+          <svg width="24" height="12" viewBox="0 0 24 12" fill="none">
+            <rect x="0.5" y="0.5" width="20" height="11" rx="3.5" stroke="#333" stroke-opacity="0.35"/>
+            <rect x="2" y="2" width="15" height="8" rx="2" fill="#333"/>
+            <path d="M22 4.5V7.5C22.8 7.2 23.5 6.4 23.5 6C23.5 5.6 22.8 4.8 22 4.5Z" fill="#333" fill-opacity="0.4"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="email-header" style="padding-top:60px">
+        <div class="email-from">
+          <div class="email-avatar">H</div>
+          <div class="email-from-info">
+            <div class="email-sender">Heirlo · Legacy Notification</div>
+            <div class="email-addr">hello@heirlo.app</div>
+          </div>
+          <div class="email-time-badge">now</div>
+        </div>
+        <div class="email-subject">You've been assigned something meaningful</div>
+      </div>
+
+      <div class="email-body">
+        <p class="email-greeting">
+          Hi Priya,<br><br>
+          Malika B. has assigned you an item from her Heirlo vault. She wants you to acknowledge it — creating a clear, documented record of her intentions while she's still here.
+        </p>
+
+        <div class="email-item-card">
+          <div class="email-item-label">Item assigned to you</div>
+          <div class="email-item-name">Mum's Gold Bangles</div>
+          <div class="email-item-from">From <span>Malika Begum</span></div>
+          <div class="email-item-photo">
+            <div class="ack-item-photo-glow"></div>
+            <div class="email-item-photo-inner">
+              <svg viewBox="0 0 48 48" fill="none" width="56" height="56">
+                <circle cx="24" cy="24" r="18" stroke="#c9a87c" stroke-width="2.5" fill="none"/>
+                <circle cx="24" cy="24" r="12" stroke="#c9a87c" stroke-width="1.5" fill="none" stroke-dasharray="4 3"/>
+                <circle cx="24" cy="6" r="3" fill="#c9a87c"/>
+                <circle cx="24" cy="42" r="3" fill="#c9a87c"/>
+              </svg>
+              <div class="email-item-photo-label" style="color:#c9a87c;opacity:0.7">Gold Bangles · 22kt</div>
+            </div>
+          </div>
+          <div class="email-message">
+            "These were my grandmother's, passed to my mother, and now I want them with you. Please acknowledge so I know you understand and accept."
+          </div>
+          <button class="email-cta-btn" onclick="goToAck()">
+            View & Acknowledge →
+          </button>
+          <button class="email-decline" onclick="goToAck()">
+            View details first
+          </button>
+        </div>
+
+        <p class="email-footer">
+          No Heirlo account required. Your acknowledgment will be timestamped and stored in Malika's vault.<br><br>
+          <a href="#" style="color:#888;text-decoration:none;">heirlo.app</a> · Legacy, clarified.
+        </p>
+      </div>
+    </div>
+
+    <!-- SCREEN 3: ACKNOWLEDGMENT PAGE -->
+    <div class="screen" id="screen-ack">
+      <div class="notch">
+        <div class="notch-cam"></div>
+        <div class="notch-bar"></div>
+      </div>
+      <div class="status-bar">
+        <span>9:41</span>
+        <div class="status-icons">
+          <div class="sig-bar">
+            <span style="height:4px"></span><span style="height:7px"></span>
+            <span style="height:10px"></span><span style="height:13px"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="ack-header">
+        <div class="ack-back" onclick="goToEmail()">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M10 12L6 8L10 4" stroke="rgba(240,236,255,0.6)" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="ack-header-title">Item Assignment</div>
+      </div>
+
+      <div class="ack-body" id="ack-body">
+        <div class="ack-from-pill">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+            <circle cx="5" cy="3" r="2" stroke="#00c9a7" stroke-width="1.2"/>
+            <path d="M1 9C1 7.3 2.8 6 5 6C7.2 6 9 7.3 9 9" stroke="#00c9a7" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+          From Malika Begum
+        </div>
+
+        <div class="ack-headline">
+          She wants you to have<br><em>Mum's Gold Bangles</em>
+        </div>
+
+        <div class="ack-item-card">
+          <div class="ack-item-photo">
+            <div class="ack-item-photo-glow"></div>
+            <svg class="jewelry-svg" viewBox="0 0 80 80" fill="none">
+              <circle cx="40" cy="40" r="30" stroke="#c9a87c" stroke-width="3" fill="none"/>
+              <circle cx="40" cy="40" r="22" stroke="#c9a87c" stroke-width="1.5" fill="none" stroke-dasharray="6 4"/>
+              <circle cx="40" cy="10" r="4" fill="#c9a87c"/>
+              <circle cx="40" cy="70" r="4" fill="#c9a87c"/>
+              <circle cx="10" cy="40" r="4" fill="#c9a87c"/>
+              <circle cx="70" cy="40" r="4" fill="#c9a87c"/>
+            </svg>
+          </div>
+          <div class="ack-item-info">
+            <div class="ack-item-label">Assigned to you</div>
+            <div class="ack-item-name">Mum's Gold Bangles</div>
+            <div class="ack-item-desc">22kt gold bangles, set of 4. Inherited from grandmother. Has been in the family since 1962.</div>
+          </div>
+        </div>
+
+        <div class="ack-note-card">
+          <div class="ack-note-label">Personal message</div>
+          <div class="ack-note-text">"These were my grandmother's, passed to my mother, and now I want them with you. Please acknowledge so I know you understand and accept."</div>
+        </div>
+
+        <div class="ack-legal">
+          <strong>What does acknowledging mean?</strong> It creates a timestamped digital record that you've been informed of and accepted this assignment. It doesn't transfer ownership — only Malika's passing will do that. This record will be stored securely in her Heirlo vault.
+        </div>
+      </div>
+
+      <div class="ack-actions">
+        <button class="ack-accept-btn" onclick="handleAccept(event)">
+          I acknowledge this assignment
+        </button>
+        <button class="ack-decline-btn">
+          Decline this assignment
+        </button>
+      </div>
+    </div>
+
+    <!-- SCREEN 4: CONFIRMATION -->
+    <div class="screen" id="screen-confirm">
+      <div class="notch">
+        <div class="notch-cam"></div>
+        <div class="notch-bar"></div>
+      </div>
+      <div class="status-bar">
+        <span>9:41</span>
+        <div class="status-icons">
+          <div class="sig-bar">
+            <span style="height:4px"></span><span style="height:7px"></span>
+            <span style="height:10px"></span><span style="height:13px"></span>
+          </div>
+        </div>
+      </div>
+
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 32px;text-align:center;margin-top:40px;">
+        <div class="confirm-ring">
+          <div class="confirm-check">
+            <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+              <path class="check-path" d="M14 26L22 34L38 18" stroke="#00c9a7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="confirm-headline">
+          Acknowledged.<br><em>It's on record.</em>
+        </div>
+
+        <div class="confirm-sub">
+          Your acknowledgment has been timestamped and securely stored in Malika's Heirlo vault. She will be notified.
+        </div>
+
+        <div class="confirm-timestamp">
+          <div class="confirm-ts-dot"></div>
+          <div class="confirm-ts-text">
+            <div style="font-weight:500;color:rgba(240,236,255,0.8)">Acknowledgment recorded</div>
+            <div>April 8, 2026 · 9:41 AM ET</div>
+          </div>
+        </div>
+
+        <div class="confirm-brand">Heirlo</div>
+        <div class="confirm-tagline">Legacy should be acknowledged, not assumed.</div>
+      </div>
+    </div>
+
+  </div><!-- /phone-frame -->
+</div><!-- /phone-wrap -->
+
+<!-- Navigation dots -->
+<div class="nav-dots">
+  <div class="nav-dot active" onclick="goToScreen(0)"></div>
+  <div class="nav-dot" onclick="goToScreen(1)"></div>
+  <div class="nav-dot" onclick="goToScreen(2)"></div>
+  <div class="nav-dot" onclick="goToScreen(3)"></div>
+</div>
+
+<script>
+const screens = ['screen-lock','screen-email','screen-ack','screen-confirm'];
+const labels = ['Recipient · Lock Screen','Recipient · Notification Email','Recipient · Acknowledgment Page','Recipient · Confirmed'];
+let current = 0;
+
+function goToScreen(idx) {
+  document.getElementById(screens[current]).classList.remove('active');
+  current = idx;
+  document.getElementById(screens[current]).classList.add('active');
+  document.querySelectorAll('.nav-dot').forEach((d,i)=>d.classList.toggle('active',i===idx));
+  document.getElementById('demo-label').textContent = labels[idx];
+}
+
+// Auto-show notification after 1.5s on lock screen
+setTimeout(()=>{
+  document.getElementById('notif-banner').classList.add('show');
+}, 1200);
+
+function goToEmail(){goToScreen(1);}
+function goToAck(){goToScreen(2);}
+
+function handleAccept(e){
+  // Ripple
+  const btn = e.currentTarget;
+  const r = document.createElement('span');
+  r.className='ripple';
+  const rect = btn.getBoundingClientRect();
+  const size = Math.max(rect.width,rect.height);
+  r.style.cssText=`width:${size}px;height:${size}px;left:${e.clientX-rect.left-size/2}px;top:${e.clientY-rect.top-size/2}px;`;
+  btn.appendChild(r);
+  setTimeout(()=>{r.remove();},500);
+  btn.textContent='Acknowledged ✓';
+  btn.style.background='#0a6b55';
+  setTimeout(()=>goToScreen(3),700);
+}
+
+// Keyboard nav
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key==='ArrowDown') goToScreen(Math.min(3,current+1));
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp') goToScreen(Math.max(0,current-1));
+});
+</script>
+</body>
+</html>
