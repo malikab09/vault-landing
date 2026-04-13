@@ -1,4 +1,7 @@
 {
+  "rewrites": [
+    { "source": "/deck", "destination": "/deck.html" }
+  ],
   "headers": [
     {
       "source": "/(.*).html",
