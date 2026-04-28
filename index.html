@@ -1,1121 +1,1616 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Heirlo — Legacy, Clarified</title>
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --black: #0C1519;
-      --jet: #2A3038;
-      --brass: #CF9D7B;
-      --coffee: #724B39;
-      --brass-muted: rgba(207,157,123,0.5);
-      --brass-dim: rgba(207,157,123,0.25);
-      --brass-faint: rgba(207,157,123,0.10);
-      --white-muted: rgba(255,255,255,0.55);
-      --white-dim: rgba(255,255,255,0.30);
-      --display: 'Fraunces', serif;
-      --sans: 'DM Sans', system-ui, sans-serif;
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      background: var(--black);
-      color: rgba(255,255,255,0.8);
-      font-family: var(--sans);
-      font-size: 16px;
-      font-weight: 300;
-      line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    /* ── NAV ── */
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      background: rgba(12,21,25,0.88);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-bottom: 1px solid rgba(207,157,123,0.08);
-      height: 64px;
-      display: flex;
-      align-items: center;
-      transition: border-color 0.2s;
-    }
-
-    .nav-inner {
-      max-width: 1120px;
-      width: 100%;
-      margin: 0 auto;
-      padding: 0 32px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .nav-logo {
-      font-family: var(--display);
-      font-size: 1.35rem;
-      font-weight: 900;
-      letter-spacing: 0.06em;
-      color: var(--brass);
-      text-decoration: none;
-      text-transform: uppercase;
-    }
-
-    .nav-logo .logo-l { color: var(--coffee); }
-    .nav-logo .logo-o {
-      display: inline-block;
-      animation: floatO 2.6s ease-in-out infinite;
-      filter: drop-shadow(0 0 8px rgba(207,157,123,0.35));
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 36px;
-      list-style: none;
-    }
-
-    .nav-links a {
-      font-family: var(--sans);
-      font-size: 0.875rem;
-      font-weight: 400;
-      color: var(--white-dim);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-
-    .nav-links a:hover { color: var(--brass); }
-
-    .btn {
-      display: inline-block;
-      font-family: var(--sans);
-      font-size: 0.875rem;
-      font-weight: 500;
-      letter-spacing: 0.02em;
-      padding: 10px 22px;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-      text-decoration: none;
-      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
-    }
-
-    .btn-brass {
-      background: var(--brass);
-      color: var(--black);
-    }
-
-    .btn-brass:hover {
-      background: #d9a989;
-      transform: translateY(-1px);
-      box-shadow: 0 4px 20px rgba(207,157,123,0.3);
-    }
-
-    .btn-brass:active { transform: translateY(0); }
-
-    .btn-lg {
-      font-size: 1rem;
-      padding: 13px 28px;
-      border-radius: 10px;
-    }
-
-    /* ── HERO ── */
-    .hero {
-      min-height: 100svh;
-      padding: 120px 32px 80px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-      background: var(--black);
-    }
-
-    .hero::before {
-      content: '';
-      position: absolute;
-      top: -120px; right: -200px;
-      width: 700px; height: 700px;
-      background: radial-gradient(circle, rgba(207,157,123,0.07) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    .hero::after {
-      content: '';
-      position: absolute;
-      bottom: -80px; left: -150px;
-      width: 500px; height: 500px;
-      background: radial-gradient(circle, rgba(114,75,57,0.06) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    .hero-inner {
-      max-width: 760px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .hero-eyebrow {
-      display: inline-block;
-      font-family: var(--sans);
-      font-size: 0.75rem;
-      font-weight: 400;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--brass);
-      background: var(--brass-faint);
-      padding: 5px 14px;
-      border-radius: 100px;
-      margin-bottom: 28px;
-    }
-
-    /* Wordmark in hero */
-    .hero-wordmark {
-      font-family: var(--display);
-      font-weight: 900;
-      font-size: clamp(4rem, 12vw, 8rem);
-      line-height: 1;
-      letter-spacing: 0.02em;
-      color: var(--brass);
-      margin-bottom: 8px;
-      text-transform: uppercase;
-    }
-
-    .hero-wordmark .logo-l { color: var(--coffee); }
-    .hero-wordmark .logo-o {
-      display: inline-block;
-      animation: floatO 2.6s ease-in-out infinite;
-      filter: drop-shadow(0 0 12px rgba(207,157,123,0.4));
-    }
-
-    .hero-tagline {
-      font-family: var(--sans);
-      font-weight: 300;
-      font-size: clamp(0.9rem, 2.5vw, 1.25rem);
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--brass-muted);
-      margin-bottom: 32px;
-    }
-
-    .hero-sub {
-      font-size: 1.125rem;
-      color: var(--white-muted);
-      max-width: 520px;
-      margin: 0 auto 48px;
-      line-height: 1.7;
-      font-weight: 300;
-    }
-
-    .waitlist-form {
-      display: flex;
-      gap: 10px;
-      max-width: 460px;
-      margin: 0 auto 14px;
-    }
-
-    .waitlist-form input[type="email"] {
-      flex: 1;
-      font-family: var(--sans);
-      font-size: 0.9375rem;
-      font-weight: 300;
-      padding: 13px 18px;
-      border: 1.5px solid rgba(207,157,123,0.18);
-      border-radius: 8px;
-      background: rgba(255,255,255,0.04);
-      color: #fff;
-      outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-
-    .waitlist-form input[type="email"]:focus {
-      border-color: var(--brass);
-      box-shadow: 0 0 0 3px rgba(207,157,123,0.12);
-    }
-
-    .waitlist-form input[type="email"]::placeholder { color: rgba(255,255,255,0.3); }
-
-    .form-note {
-      font-size: 0.8125rem;
-      color: var(--white-dim);
-      margin-bottom: 56px;
-    }
-
-    .hero-social {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
-    }
-
-    .social-proof {
-      font-size: 0.8125rem;
-      color: var(--white-dim);
-    }
-
-    .avatars {
-      display: flex;
-    }
-
-    .avatar {
-      width: 32px; height: 32px;
-      border-radius: 50%;
-      border: 2px solid var(--black);
-      margin-left: -8px;
-      background: var(--jet);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.75rem;
-      font-weight: 500;
-      color: var(--brass-muted);
-    }
-
-    .avatar:first-child { margin-left: 0; }
-
-    /* ── SUCCESS STATE ── */
-    .form-success {
-      display: none;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      font-size: 0.9375rem;
-      color: var(--brass);
-      font-weight: 400;
-      padding: 14px;
-      margin-bottom: 14px;
-    }
-
-    .form-success svg {
-      width: 20px; height: 20px;
-      stroke: var(--brass);
-      fill: none;
-      stroke-width: 2.5;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      flex-shrink: 0;
-    }
-
-    /* ── HOW IT WORKS ── */
-    .how {
-      padding: 112px 32px;
-      background: var(--jet);
-    }
-
-    .section-label {
-      font-family: var(--sans);
-      font-size: 0.75rem;
-      font-weight: 400;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--brass);
-      display: block;
-      margin-bottom: 16px;
-    }
-
-    .section-title {
-      font-family: var(--display);
-      font-size: clamp(2rem, 4vw, 3rem);
-      font-weight: 900;
-      line-height: 1.15;
-      color: #fff;
-      margin-bottom: 16px;
-    }
-
-    .section-sub {
-      font-size: 1.0625rem;
-      color: var(--white-muted);
-      max-width: 520px;
-      line-height: 1.7;
-      font-weight: 300;
-    }
-
-    .section-header {
-      max-width: 1120px;
-      margin: 0 auto 72px;
-    }
-
-    .steps-grid {
-      max-width: 1120px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 2px;
-      background: rgba(207,157,123,0.08);
-      border-radius: 16px;
-      overflow: hidden;
-    }
-
-    .step {
-      background: var(--jet);
-      padding: 40px 32px;
-    }
-
-    .step-num {
-      font-family: var(--display);
-      font-size: 3.5rem;
-      font-weight: 900;
-      color: rgba(207,157,123,0.12);
-      line-height: 1;
-      margin-bottom: 20px;
-    }
-
-    .step-icon {
-      width: 44px; height: 44px;
-      background: var(--brass-faint);
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 20px;
-    }
-
-    .step-icon svg {
-      width: 22px; height: 22px;
-      stroke: var(--brass);
-      fill: none;
-      stroke-width: 1.75;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
-    .step h3 {
-      font-family: var(--display);
-      font-size: 1.25rem;
-      font-weight: 900;
-      color: #fff;
-      margin-bottom: 10px;
-      line-height: 1.2;
-    }
-
-    .step p {
-      font-size: 0.9375rem;
-      color: var(--white-muted);
-      line-height: 1.65;
-      font-weight: 300;
-    }
-
-    /* ── WHO IT'S FOR ── */
-    .who {
-      padding: 112px 32px;
-      background: var(--black);
-    }
-
-    .personas-grid {
-      max-width: 1120px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-    }
-
-    .persona-card {
-      background: var(--jet);
-      border: 1px solid rgba(207,157,123,0.08);
-      border-radius: 14px;
-      padding: 32px;
-      transition: border-color 0.25s, transform 0.25s;
-    }
-
-    .persona-card:hover {
-      border-color: rgba(207,157,123,0.3);
-      transform: translateY(-3px);
-    }
-
-    .persona-emoji {
-      font-size: 2rem;
-      margin-bottom: 16px;
-      display: block;
-    }
-
-    .persona-card h3 {
-      font-family: var(--display);
-      font-size: 1.15rem;
-      font-weight: 900;
-      color: #fff;
-      margin-bottom: 8px;
-    }
-
-    .persona-card p {
-      font-size: 0.9rem;
-      color: var(--white-muted);
-      line-height: 1.65;
-      font-weight: 300;
-    }
-
-    /* ── FAQ ── */
-    .faq {
-      padding: 112px 32px;
-      background: var(--jet);
-    }
-
-    .faq-inner {
-      max-width: 720px;
-      margin: 0 auto;
-    }
-
-    .faq-list {
-      margin-top: 56px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .faq-item {
-      background: rgba(255,255,255,0.03);
-      border-radius: 10px;
-      overflow: hidden;
-      border: 1px solid rgba(207,157,123,0.08);
-    }
-
-    .faq-question {
-      width: 100%;
-      text-align: left;
-      padding: 22px 28px;
-      background: none;
-      border: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      font-family: var(--sans);
-      font-size: 1rem;
-      font-weight: 400;
-      color: #fff;
-      transition: background 0.15s;
-    }
-
-    .faq-question:hover { background: rgba(207,157,123,0.04); }
-
-    .faq-icon {
-      width: 22px; height: 22px;
-      flex-shrink: 0;
-      position: relative;
-    }
-
-    .faq-icon::before,
-    .faq-icon::after {
-      content: '';
-      position: absolute;
-      background: var(--brass);
-      border-radius: 2px;
-      transition: transform 0.25s;
-    }
-
-    .faq-icon::before {
-      width: 12px; height: 1.5px;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-    }
-
-    .faq-icon::after {
-      width: 1.5px; height: 12px;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-    }
-
-    .faq-item.open .faq-icon::after {
-      transform: translate(-50%, -50%) rotate(90deg);
-    }
-
-    .faq-answer {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.35s ease;
-    }
-
-    .faq-answer-inner {
-      padding: 0 28px 22px;
-      font-size: 0.9375rem;
-      color: var(--white-muted);
-      line-height: 1.7;
-      font-weight: 300;
-    }
-
-    /* ── CTA SECTION ── */
-    .cta-section {
-      padding: 112px 32px;
-      background: var(--black);
-      text-align: center;
-    }
-
-    .cta-section .section-title {
-      max-width: 600px;
-      margin: 0 auto 16px;
-    }
-
-    .cta-section .section-sub {
-      margin: 0 auto 48px;
-    }
-
-    .cta-waitlist-form {
-      display: flex;
-      gap: 10px;
-      max-width: 440px;
-      margin: 0 auto 14px;
-    }
-
-    .cta-waitlist-form input[type="email"] {
-      flex: 1;
-      font-family: var(--sans);
-      font-size: 0.9375rem;
-      font-weight: 300;
-      padding: 13px 18px;
-      border: 1.5px solid rgba(207,157,123,0.14);
-      border-radius: 8px;
-      background: rgba(255,255,255,0.04);
-      color: #fff;
-      outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-
-    .cta-waitlist-form input[type="email"]::placeholder { color: rgba(255,255,255,0.3); }
-
-    .cta-waitlist-form input[type="email"]:focus {
-      border-color: var(--brass);
-      box-shadow: 0 0 0 3px rgba(207,157,123,0.12);
-    }
-
-    .cta-note {
-      font-size: 0.8125rem;
-      color: var(--white-dim);
-    }
-
-    /* ── FOOTER ── */
-    footer {
-      background: var(--black);
-      border-top: 1px solid rgba(207,157,123,0.08);
-      padding: 48px 32px;
-    }
-
-    .footer-inner {
-      max-width: 1120px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 20px;
-    }
-
-    .footer-logo {
-      font-family: var(--display);
-      font-size: 1.15rem;
-      font-weight: 900;
-      letter-spacing: 0.06em;
-      color: var(--brass);
-      text-decoration: none;
-      text-transform: uppercase;
-    }
-
-    .footer-logo .logo-l { color: var(--coffee); }
-
-    .footer-links {
-      display: flex;
-      gap: 28px;
-      list-style: none;
-    }
-
-    .footer-links a {
-      font-size: 0.875rem;
-      color: var(--white-dim);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-
-    .footer-links a:hover { color: var(--brass); }
-
-    .footer-copy {
-      font-size: 0.8125rem;
-      color: rgba(255,255,255,0.2);
-    }
-
-    /* ── FORM ERROR ── */
-    .form-error {
-      font-size: 0.875rem;
-      color: #ff6b6b;
-      margin-bottom: 14px;
-      min-height: 1.2em;
-    }
-
-    /* ── FLOATING O ANIMATION ── */
-    @keyframes floatO {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-7px); }
-    }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 900px) {
-      .steps-grid { grid-template-columns: repeat(2, 1fr); }
-      .personas-grid { grid-template-columns: repeat(2, 1fr); }
-      .nav-links { display: none; }
-    }
-
-    @media (max-width: 600px) {
-      .steps-grid { grid-template-columns: 1fr; }
-      .personas-grid { grid-template-columns: 1fr; }
-
-      .waitlist-form,
-      .cta-waitlist-form {
-        flex-direction: column;
-      }
-
-      .waitlist-form .btn,
-      .cta-waitlist-form .btn {
-        width: 100%;
-        text-align: center;
-      }
-
-      .footer-inner { flex-direction: column; align-items: flex-start; }
-    }
-    /* ── HEIRLO DANDELION MARK ── */
-    @keyframes heirlo-drift-a {
-      0%,100% { transform: translate(0,0) rotate(0deg); opacity: 0.55; }
-      50%      { transform: translate(9px,-11px) rotate(8deg); opacity: 0.2; }
-    }
-    @keyframes heirlo-drift-b {
-      0%,100% { transform: translate(0,0) rotate(0deg); opacity: 0.45; }
-      50%      { transform: translate(13px,-8px) rotate(-5deg); opacity: 0.15; }
-    }
-    @keyframes heirlo-drift-c {
-      0%,100% { transform: translate(0,0) rotate(0deg); opacity: 0.35; }
-      50%      { transform: translate(7px,-14px) rotate(12deg); opacity: 0.1; }
-    }
-    .heirlo-mark .drifter-a {
-      animation: heirlo-drift-a 4s ease-in-out infinite 0.5s;
-      transform-origin: 210px 68px;
-      transform-box: fill-box;
-    }
-    .heirlo-mark .drifter-b {
-      animation: heirlo-drift-b 5s ease-in-out infinite 1.5s;
-      transform-origin: 215px 110px;
-      transform-box: fill-box;
-    }
-    .heirlo-mark .drifter-c {
-      animation: heirlo-drift-c 6s ease-in-out infinite 3s;
-      transform-origin: 222px 55px;
-      transform-box: fill-box;
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .heirlo-mark .drifter-a,
-      .heirlo-mark .drifter-b,
-      .heirlo-mark .drifter-c { animation: none; }
-    }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Heirlo — Legacy, Clarified</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..900,0..100&family=DM+Sans:opsz,wght@9..40,300..700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --linen:#F5EFE8;
+    --cream:#EDE5DB;
+    --paper:#FBF7F1;
+    --coffee:#724B39;
+    --coffee-soft:#8B6552;
+    --brass:#CF9D7B;
+    --brass-deep:#B8835F;
+    --ink:#1B1612;
+    --ink-soft:#3D332C;
+    --line:rgba(114,75,57,0.16);
+    --line-strong:rgba(114,75,57,0.32);
+    --red-accent:#8E2C2C;
+    --red-accent-deep:#4A1010;
+    --line-red:rgba(142,44,44,0.32);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--linen);
+    color:var(--ink);
+    font-family:'DM Sans', sans-serif;
+    font-weight:400;
+    font-size:16px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  .display{font-family:'Fraunces',serif;font-weight:300;letter-spacing:-0.02em;line-height:1.02}
+  .eyebrow{
+    font-family:'DM Sans',sans-serif;
+    font-size:11px;
+    letter-spacing:0.22em;
+    text-transform:uppercase;
+    color:var(--coffee);
+    font-weight:500;
+  }
+  a{color:inherit;text-decoration:none}
+
+  /* ---------- NAV ---------- */
+  nav.top{
+    position:fixed;top:0;left:0;right:0;z-index:50;
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    background:rgba(245,239,232,0.78);
+    border-bottom:1px solid var(--line);
+  }
+  nav.top .row{
+    max-width:1280px;margin:0 auto;
+    padding:18px 40px;
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .logo{
+    font-family:'Fraunces',serif;
+    font-weight:900;
+    font-size:20px;
+    letter-spacing:0.12em;
+    color:var(--ink);
+    display:flex;align-items:baseline;gap:1px;
+  }
+  .logo .l{color:var(--coffee)}
+  .logo .o{color:var(--brass-deep);display:inline-block;animation:float 2.6s ease-in-out infinite}
+  @keyframes float{
+    0%,100%{transform:translateY(0)}
+    50%{transform:translateY(-2px)}
+  }
+  nav .links{display:flex;gap:36px;font-size:14px;color:var(--ink-soft)}
+  nav .links a:hover{color:var(--coffee)}
+  .btn{
+    display:inline-flex;align-items:center;gap:10px;
+    padding:12px 22px;border-radius:999px;
+    font-size:14px;font-weight:500;letter-spacing:0.01em;
+    transition:all .25s ease;cursor:pointer;border:none;
+    font-family:'DM Sans',sans-serif;
+  }
+  .btn-primary{background:var(--ink);color:var(--linen)}
+  .btn-primary:hover{background:var(--coffee);transform:translateY(-1px)}
+  .btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--line-strong)}
+  .btn-ghost:hover{background:rgba(114,75,57,0.06)}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    min-height:100vh;
+    padding:140px 40px 80px;
+    display:grid;
+    grid-template-columns:1.05fr 1fr;
+    grid-template-rows:auto auto;
+    gap:60px;
+    max-width:1280px;
+    margin:0 auto;
+    align-items:center;
+  }
+  .hero > div:first-child, .hero .dandelion-stage{grid-row:1}
+  .hero .pill{
+    display:inline-flex;align-items:center;gap:10px;
+    padding:7px 14px;border-radius:999px;
+    background:rgba(207,157,123,0.18);
+    border:1px solid rgba(207,157,123,0.4);
+    font-size:12px;letter-spacing:0.16em;text-transform:uppercase;
+    color:var(--coffee);
+  }
+  .pill .dot{width:6px;height:6px;border-radius:50%;background:var(--brass-deep);box-shadow:0 0 0 4px rgba(207,157,123,0.25)}
+  h1.hero-title{
+    font-size:clamp(56px,7vw,104px);
+    margin:24px 0 28px;
+  }
+  h1.hero-title .accent{font-style:italic;color:var(--coffee);font-weight:300}
+  .hero-sub{
+    font-size:18px;color:var(--ink-soft);max-width:480px;
+    line-height:1.6;
+  }
+  .hero-cta{display:flex;gap:14px;align-items:center;margin-top:40px;flex-wrap:wrap}
+  .hero-meta{
+    display:flex;align-items:center;gap:14px;margin-top:36px;
+    font-size:13px;color:var(--ink-soft);
+  }
+  .avatars{display:flex}
+  .avatars .av{
+    width:30px;height:30px;border-radius:50%;
+    border:2px solid var(--linen);
+    margin-left:-8px;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Fraunces',serif;font-weight:700;font-size:12px;
+    color:var(--linen);
+  }
+  .av:nth-child(1){background:#724B39;margin-left:0}
+  .av:nth-child(2){background:#8B6552}
+  .av:nth-child(3){background:#A37B62}
+  .av:nth-child(4){background:#B8835F}
+  .av:nth-child(5){background:#CF9D7B;color:var(--coffee)}
+
+  /* ---------- WAITLIST FORM ---------- */
+  .waitlist-form{
+    display:flex;
+    gap:10px;
+    max-width:420px;
+    align-items:center;
+  }
+  .waitlist-form input[type="email"]{
+    flex:1;
+    font-family:'DM Sans',sans-serif;
+    font-size:14px;
+    font-weight:400;
+    padding:12px 18px;
+    border:1px solid var(--line-strong);
+    border-radius:999px;
+    background:var(--paper);
+    color:var(--ink);
+    outline:none;
+    transition:border-color 0.2s, box-shadow 0.2s;
+  }
+  .waitlist-form input[type="email"]:focus{
+    border-color:var(--coffee);
+    box-shadow:0 0 0 3px rgba(114,75,57,0.12);
+  }
+  .waitlist-form input[type="email"]::placeholder{color:var(--ink-soft);opacity:0.5}
+  .form-note{
+    font-size:13px;
+    color:var(--ink-soft);
+    margin-top:12px;
+  }
+  .form-success{
+    display:none;
+    align-items:center;
+    gap:10px;
+    font-size:15px;
+    color:var(--coffee);
+    font-weight:500;
+    padding:12px 0;
+  }
+  .form-success svg{
+    width:20px;height:20px;
+    stroke:var(--coffee);
+    fill:none;
+    stroke-width:2.5;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+    flex-shrink:0;
+  }
+  .form-error{
+    font-size:14px;
+    color:var(--red-accent);
+    min-height:1.2em;
+    margin-top:6px;
+  }
+
+  /* ---------- CTA WAITLIST FORM ---------- */
+  .cta-waitlist-form{
+    display:flex;
+    gap:10px;
+    max-width:440px;
+    margin:0 auto;
+    align-items:center;
+    position:relative;
+  }
+  .cta-waitlist-form input[type="email"]{
+    flex:1;
+    font-family:'DM Sans',sans-serif;
+    font-size:14px;
+    font-weight:400;
+    padding:12px 18px;
+    border:1px solid rgba(207,157,123,0.35);
+    border-radius:999px;
+    background:rgba(245,239,232,0.08);
+    color:var(--linen);
+    outline:none;
+    transition:border-color 0.2s, box-shadow 0.2s;
+  }
+  .cta-waitlist-form input[type="email"]:focus{
+    border-color:var(--brass);
+    box-shadow:0 0 0 3px rgba(207,157,123,0.18);
+  }
+  .cta-waitlist-form input[type="email"]::placeholder{color:rgba(245,239,232,0.4)}
+  .cta-form-note{
+    font-size:13px;
+    color:rgba(245,239,232,0.5);
+    margin-top:12px;
+  }
+  .cta-form-success{
+    display:none;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    font-size:15px;
+    color:var(--brass);
+    font-weight:500;
+    padding:12px 0;
+    position:relative;
+  }
+  .cta-form-success svg{
+    width:20px;height:20px;
+    stroke:var(--brass);
+    fill:none;
+    stroke-width:2.5;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+    flex-shrink:0;
+  }
+  .cta-form-error{
+    font-size:14px;
+    color:#ff6b6b;
+    min-height:1.2em;
+    margin-top:6px;
+    position:relative;
+  }
+
+  /* ---------- 3D DANDELION ---------- */
+  .dandelion-stage{
+    position:relative;
+    aspect-ratio:1/1;
+    perspective:1400px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .dandelion-photo{display:none}
+  .dandelion{
+    position:relative;
+    width:78%;height:78%;
+    transform-style:preserve-3d;
+    animation:spin 60s linear infinite;
+  }
+  .dandelion:not(.lit){animation-play-state:paused}
+  @keyframes spin{
+    from{transform:rotateY(0) rotateX(14deg) rotateZ(-6deg)}
+    to{transform:rotateY(360deg) rotateX(14deg) rotateZ(-6deg)}
+  }
+  .dandelion-core{
+    opacity:0;
+    transition:opacity 0.5s ease 0.2s;
+  }
+  .dandelion.lit .dandelion-core{opacity:1}
+  .seed{
+    position:absolute;top:50%;left:50%;
+    width:1px;
+    transform-origin:bottom center;
+    transform-style:preserve-3d;
+    --final-transform:translate(-50%,-100%);
+    transform:var(--final-transform);
+    opacity:0;
+    transition:opacity 0.8s ease var(--in-delay,0s);
+  }
+  .dandelion.lit .seed{
+    opacity:1;
+  }
+  .seed::before{
+    content:"";position:absolute;left:0;top:0;
+    width:1px;height:100%;
+    background:linear-gradient(to top, rgba(60,30,15,0.85), rgba(114,75,57,0.55) 40%, rgba(207,157,123,0.25));
+    opacity:0;
+    transition:opacity 0.8s ease;
+  }
+  .dandelion.lit .seed::before{
+    opacity:var(--stem-opacity, 0.85);
+    transition-delay:calc(var(--in-delay, 0s) + 0.6s);
+  }
+  .seed::after{
+    content:"";position:absolute;
+    width:var(--tuft, 18px);height:var(--tuft, 18px);
+    left:calc(var(--tuft, 18px) / -2);
+    top:calc(var(--tuft, 18px) / -2 + 4px);
+    border-radius:50%;
+    background:
+      radial-gradient(circle at 50% 50%,
+        #fff 0%,
+        rgba(245,239,232,0.95) 18%,
+        rgba(207,157,123,0.85) 38%,
+        rgba(114,75,57,0.6) 60%,
+        rgba(114,75,57,0) 80%);
+    filter:blur(var(--tuft-blur, 0.8px));
+    opacity:var(--tuft-opacity, 1);
+  }
+  .seed.drift{
+    animation:drift 8s ease-in-out infinite;
+  }
+  .seed.drift::after{
+    background:radial-gradient(circle at 50% 50%, #fff, rgba(207,157,123,0.7) 50%, rgba(207,157,123,0) 80%);
+    width:24px;height:24px;left:-11px;top:-14px;
+  }
+  @keyframes drift{
+    0%,100%{transform:translateZ(0) translateY(0)}
+    50%{transform:translateZ(80px) translateY(-30px) rotate(20deg)}
+  }
+  .dandelion-core{
+    position:absolute;top:50%;left:50%;
+    width:34px;height:34px;border-radius:50%;
+    transform:translate(-50%,-50%);
+    background:
+      radial-gradient(circle at 38% 35%, #E8C4A3 0%, #B8835F 30%, #8E2C2C 65%, #4A1010 100%);
+    box-shadow:
+      0 0 40px rgba(207,157,123,0.5),
+      inset -3px -5px 10px rgba(0,0,0,0.45),
+      inset 3px 4px 8px rgba(255,255,255,0.25);
+    z-index:2;
+    opacity:0;
+    transition:opacity 0.5s ease 0.2s;
+  }
+  .dandelion-stage.lit .dandelion-core{opacity:1}
+  .dandelion-core::before{
+    content:"";position:absolute;inset:-4px;border-radius:50%;
+    background:
+      conic-gradient(from 0deg,
+        rgba(114,75,57,0.6) 0deg, transparent 8deg,
+        rgba(114,75,57,0.6) 18deg, transparent 26deg,
+        rgba(114,75,57,0.6) 36deg, transparent 44deg,
+        rgba(114,75,57,0.6) 54deg, transparent 62deg,
+        rgba(114,75,57,0.6) 72deg, transparent 80deg,
+        rgba(114,75,57,0.6) 90deg, transparent 98deg,
+        rgba(114,75,57,0.6) 108deg, transparent 116deg,
+        rgba(114,75,57,0.6) 126deg, transparent 134deg,
+        rgba(114,75,57,0.6) 144deg, transparent 152deg,
+        rgba(114,75,57,0.6) 162deg, transparent 170deg,
+        rgba(114,75,57,0.6) 180deg, transparent 188deg,
+        rgba(114,75,57,0.6) 198deg, transparent 206deg,
+        rgba(114,75,57,0.6) 216deg, transparent 224deg,
+        rgba(114,75,57,0.6) 234deg, transparent 242deg,
+        rgba(114,75,57,0.6) 252deg, transparent 260deg,
+        rgba(114,75,57,0.6) 270deg, transparent 278deg,
+        rgba(114,75,57,0.6) 288deg, transparent 296deg,
+        rgba(114,75,57,0.6) 306deg, transparent 314deg,
+        rgba(114,75,57,0.6) 324deg, transparent 332deg,
+        rgba(114,75,57,0.6) 342deg, transparent 350deg);
+    mask:radial-gradient(circle, transparent 60%, black 75%, transparent 90%);
+    -webkit-mask:radial-gradient(circle, transparent 60%, black 75%, transparent 90%);
+    opacity:0.7;
+  }
+  .free-seed{
+    position:absolute;
+    width:18px;height:18px;border-radius:50%;
+    background:radial-gradient(circle at 50% 50%, #fff, rgba(207,157,123,0.65) 50%, rgba(207,157,123,0) 80%);
+    filter:blur(0.4px);
+    opacity:0;
+    animation:fly 12s ease-in-out infinite;
+  }
+  .free-seed::after{
+    content:"";position:absolute;top:50%;left:50%;
+    width:1px;height:14px;
+    background:linear-gradient(to bottom, rgba(114,75,57,0.5), transparent);
+    transform:translate(-50%,-50%) rotate(15deg);
+  }
+  .free-seed.s1{top:8%;right:-4%;animation-delay:0s}
+  .free-seed.s2{top:30%;right:-8%;animation-delay:3s;width:14px;height:14px}
+  .free-seed.s3{bottom:18%;right:6%;animation-delay:6s;width:22px;height:22px}
+  @keyframes fly{
+    0%{opacity:0;transform:translate(0,0) rotate(0)}
+    20%{opacity:0.9}
+    50%{opacity:0.7;transform:translate(40px,-30px) rotate(40deg)}
+    80%{opacity:0.5}
+    100%{opacity:0;transform:translate(80px,-70px) rotate(80deg)}
+  }
+
+  /* ENTRANCE PHASE 1 — drift-in seeds */
+  .drift-seed{
+    position:fixed;
+    width:var(--drift-size, 14px);
+    height:var(--drift-size, 14px);
+    border-radius:50%;
+    background:radial-gradient(circle at 50% 50%,
+      #fff 0%,
+      rgba(245,225,204,0.95) 18%,
+      rgba(207,157,123,0.85) 45%,
+      rgba(114,75,57,0.5) 70%,
+      rgba(114,75,57,0) 90%);
+    box-shadow:
+      0 0 12px 2px rgba(207,157,123,0.5),
+      0 0 24px 4px rgba(184,131,95,0.25);
+    filter:blur(0.4px);
+    opacity:0;
+    pointer-events:none;
+    z-index:1;
+    animation:drift-in var(--drift-dur,3s) ease-in var(--drift-delay,0s) forwards;
+  }
+  @keyframes drift-in{
+    0%   {opacity:0;   transform:translate(0,0) scale(1);}
+    20%  {opacity:1;}
+    80%  {opacity:0.85;}
+    100% {opacity:0;   transform:translate(var(--dx,0), var(--dy,0)) scale(0.3);}
+  }
+
+  /* ENTRANCE PHASE 2 — gather-glow */
+  .gather-glow{
+    position:absolute;top:50%;left:50%;
+    width:6px;height:6px;border-radius:50%;
+    background:#fff;
+    transform:translate(-50%,-50%) scale(0);
+    box-shadow:0 0 0 0 rgba(142,44,44,0);
+    opacity:0;
+    pointer-events:none;
+    z-index:3;
+  }
+  .dandelion-stage.gathered .gather-glow{
+    animation:gather-breath 1.8s ease-in-out forwards;
+  }
+  @keyframes gather-breath{
+    0%   {transform:translate(-50%,-50%) scale(0);   opacity:0; box-shadow:0 0 0 0 rgba(142,44,44,0);}
+    50%  {transform:translate(-50%,-50%) scale(1.1); opacity:1; box-shadow:0 0 90px 32px rgba(142,44,44,0.65);}
+    100% {transform:translate(-50%,-50%) scale(0.6); opacity:0; box-shadow:0 0 50px 16px rgba(142,44,44,0);}
+  }
+  .dandelion-stage.gathered .dandelion-core{opacity:1}
+
+  /* stats — hidden by default */
+  .stats-strip{
+    grid-column:1 / -1;
+    margin-top:60px;
+    display:grid;grid-template-columns:repeat(3,1fr);
+    gap:0;
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+    padding:30px 0;
+  }
+  body[data-stats="hidden"] .stats-strip{display:none}
+
+  /* ---------- SECTION ---------- */
+  section{padding:120px 40px;position:relative}
+  .container{max-width:1280px;margin:0 auto}
+  .section-head{display:grid;grid-template-columns:1fr 1.6fr;gap:80px;margin-bottom:80px;align-items:end}
+  .section-head h2{font-size:clamp(40px,5vw,68px);margin:14px 0 0}
+  .section-head h2 em{color:var(--coffee);font-style:italic;font-weight:300}
+  .section-lead{font-size:17px;color:var(--ink-soft);max-width:520px;margin:0;align-self:end}
+
+  /* ---------- HOW IT WORKS — 3D PHONE STAGE ---------- */
+  .steps{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:32px;
+    perspective:1800px;
+  }
+  .step{
+    position:relative;
+    transform-style:preserve-3d;
+    transition:transform .6s cubic-bezier(.2,.7,.2,1);
+    padding-top:20px;
+  }
+  .step .num{
+    font-family:'Fraunces',serif;font-weight:300;font-style:italic;
+    font-size:56px;color:var(--brass);
+    line-height:1;letter-spacing:-0.04em;margin-bottom:6px;
+  }
+  .step h3{font-family:'Fraunces',serif;font-weight:400;font-size:22px;margin:14px 0 10px;letter-spacing:-0.01em}
+  .step p{font-size:14px;color:var(--ink-soft);margin:0 0 26px;line-height:1.55}
+
+  /* ---------- WHO IT'S FOR — 3D tilt cards ---------- */
+  .personas{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:20px;
+    perspective:1400px;
+  }
+  .persona{
+    background:var(--cream);
+    border-radius:18px;
+    padding:36px 30px 32px;
+    position:relative;
+    overflow:hidden;
+    border:1px solid var(--line);
+    transform-style:preserve-3d;
+    transition:transform .25s ease, box-shadow .4s ease;
+    will-change:transform;
+  }
+  .persona::before{
+    content:"";position:absolute;inset:0;border-radius:18px;
+    background:radial-gradient(
+      circle at var(--mx,50%) var(--my,30%),
+      rgba(255,255,255,0.45) 0%,
+      rgba(255,255,255,0) 40%);
+    pointer-events:none;
+    transition:opacity .3s ease;
+    opacity:0;
+  }
+  .persona:hover::before{opacity:1}
+  .persona:hover{box-shadow:0 32px 50px -28px rgba(114,75,57,0.35)}
+  .persona > *{transform:translateZ(0);transition:transform .25s ease}
+  .persona:hover .glyph{transform:translateZ(40px)}
+  .persona:hover h3{transform:translateZ(28px)}
+  .persona:hover .trigger{transform:translateZ(20px)}
+  .persona:hover p{transform:translateZ(14px)}
+  .persona .glyph{
+    width:64px;height:64px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, var(--brass), var(--coffee));
+    display:flex;align-items:center;justify-content:center;
+    color:var(--linen);font-family:'Fraunces',serif;font-size:22px;
+    box-shadow:inset -3px -4px 8px rgba(0,0,0,0.25), 0 14px 24px -10px rgba(114,75,57,0.55);
+    position:relative;
+  }
+  .persona .glyph svg{width:30px;height:30px;color:var(--linen);opacity:0.95}
+  .persona .float-icon{
+    position:absolute;top:24px;right:22px;
+    width:46px;height:46px;
+    color:rgba(114,75,57,0.32);
+    transition:transform .6s cubic-bezier(.2,.7,.2,1), color .3s ease;
+    transform-origin:center;
+  }
+  .persona:hover .float-icon{
+    color:rgba(184,131,95,0.6);
+    transform:translateZ(60px) rotate(-8deg) scale(1.1);
+  }
+  .persona .float-icon svg{width:100%;height:100%}
+  .persona h3{font-family:'Fraunces',serif;font-weight:400;font-size:24px;margin:24px 0 6px;letter-spacing:-0.01em}
+  .persona .trigger{font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--coffee);font-weight:500}
+  .persona p{font-size:14px;color:var(--ink-soft);margin:14px 0 0;line-height:1.6}
+
+  /* ---------- FLOATING HEIRLOOMS — 3D scene ---------- */
+  .heirloom-scene{
+    background:
+      radial-gradient(ellipse at 70% 30%, rgba(207,157,123,0.18), transparent 55%),
+      radial-gradient(ellipse at 20% 80%, rgba(184,131,95,0.12), transparent 55%),
+      linear-gradient(180deg, var(--cream) 0%, var(--linen) 100%);
+    overflow:hidden;
+    position:relative;
+  }
+  .heirloom-grid{
+    display:grid;grid-template-columns:0.85fr 1fr;gap:80px;align-items:center;
+  }
+  .heirloom-copy h2{font-size:clamp(40px,5vw,68px);margin:14px 0 0}
+  .heirloom-copy h2 em{color:var(--coffee);font-style:italic;font-weight:300}
+  .heirloom-list{list-style:none;padding:0;margin:32px 0 0;display:grid;gap:14px}
+  .heirloom-list li{display:flex;align-items:center;gap:12px;font-size:15px;color:var(--ink-soft)}
+  .hl-dot{width:6px;height:6px;border-radius:50%;background:var(--brass-deep)}
+  .heirloom-stage{
+    position:relative;
+    aspect-ratio:1/1;
+    perspective:1400px;
+    transform-style:preserve-3d;
+  }
+  .hl-floor{
+    position:absolute;left:-10%;right:-10%;bottom:8%;height:24%;
+    background:radial-gradient(ellipse at 50% 50%, rgba(114,75,57,0.18), transparent 65%);
+    filter:blur(14px);
+    transform:rotateX(70deg);
+    pointer-events:none;
+  }
+  .hl-obj{
+    position:absolute;
+    left:var(--x,50%);top:var(--y,50%);
+    transform:translate(-50%,-50%);
+    transition:transform .15s ease-out;
+    transform-style:preserve-3d;
+    will-change:transform;
+    animation:hl-float 6s ease-in-out infinite;
+  }
+  .hl-obj:nth-child(2){animation-delay:-1s;animation-duration:7s}
+  .hl-obj:nth-child(3){animation-delay:-2.5s;animation-duration:5.5s}
+  .hl-obj:nth-child(4){animation-delay:-3s;animation-duration:8s}
+  .hl-obj:nth-child(5){animation-delay:-4s;animation-duration:6.5s}
+  .hl-obj:nth-child(6){animation-delay:-1.5s;animation-duration:7.5s}
+  @keyframes hl-float{
+    0%,100%{transform:translate(-50%,-50%) translateY(0)}
+    50%{transform:translate(-50%,-50%) translateY(-12px)}
+  }
+  .hl-label{
+    position:absolute;left:50%;bottom:-22px;transform:translateX(-50%);
+    font-family:'Fraunces',serif;font-style:italic;font-size:13px;
+    color:var(--coffee);white-space:nowrap;
+    opacity:0.7;letter-spacing:0.01em;
+  }
+
+  /* RING */
+  .hl-ring{
+    width:90px;height:90px;position:relative;
+    transform-style:preserve-3d;
+    animation:hl-spin 18s linear infinite;
+  }
+  @keyframes hl-spin{from{transform:rotateY(0deg)}to{transform:rotateY(360deg)}}
+  .hl-ring-band{
+    position:absolute;inset:0;border-radius:50%;
+    border:10px solid transparent;
+    background:
+      conic-gradient(from 30deg, #B8835F, #E8C4A3, #B8835F, #6F4831, #B8835F) border-box;
+    -webkit-mask:linear-gradient(#000 0 0) padding-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor;mask-composite:exclude;
+    box-shadow:0 12px 24px -8px rgba(60,30,15,0.4);
+  }
+  .hl-ring-stone{
+    position:absolute;top:-8px;left:50%;transform:translateX(-50%) rotateX(20deg);
+    width:18px;height:22px;
+    background:radial-gradient(ellipse at 35% 30%, #fff, #6CC0E6 40%, #1A4F70 100%);
+    clip-path:polygon(50% 0, 100% 35%, 80% 100%, 20% 100%, 0 35%);
+    box-shadow:0 0 12px rgba(108,192,230,0.6);
+  }
+
+  /* POCKET WATCH */
+  .hl-watch{
+    width:88px;height:88px;position:relative;
+    transform-style:preserve-3d;
+    animation:hl-tilt 7s ease-in-out infinite;
+  }
+  @keyframes hl-tilt{
+    0%,100%{transform:rotateZ(-6deg) rotateY(8deg)}
+    50%{transform:rotateZ(6deg) rotateY(-8deg)}
+  }
+  .hl-watch-crown{
+    position:absolute;top:-8px;left:50%;transform:translateX(-50%);
+    width:14px;height:10px;border-radius:3px 3px 1px 1px;
+    background:linear-gradient(to bottom, #E8C4A3, #6F4831);
+    box-shadow:0 2px 4px rgba(0,0,0,0.3);
+  }
+  .hl-watch-crown::after{
+    content:"";position:absolute;top:-3px;left:50%;transform:translateX(-50%);
+    width:6px;height:6px;border-radius:50%;
+    background:radial-gradient(circle at 30% 30%, #E8C4A3, #6F4831);
+  }
+  .hl-watch-face{
+    position:absolute;inset:0;border-radius:50%;
+    background:
+      radial-gradient(circle at 30% 25%, rgba(255,255,255,0.6), transparent 50%),
+      linear-gradient(135deg, #F4E8D8, #D9BFA1 60%, #B8835F);
+    border:3px solid #6F4831;
+    box-shadow:
+      inset 0 0 12px rgba(60,30,15,0.3),
+      0 14px 28px -8px rgba(60,30,15,0.45),
+      inset 0 0 0 1px rgba(255,255,255,0.4);
+  }
+  .hl-tick{
+    position:absolute;left:50%;top:6px;width:2px;height:8px;
+    background:var(--ink);transform-origin:50% 38px;
+    transform:translateX(-50%) rotate(var(--a,0deg));
+  }
+  .hl-watch-hand{
+    position:absolute;left:50%;top:50%;
+    background:var(--ink);transform-origin:50% 100%;
+    border-radius:2px;
+  }
+  .hl-hour{width:3px;height:24px;transform:translate(-50%,-100%) rotate(45deg);animation:hl-hr 60s linear infinite}
+  .hl-min{width:2px;height:32px;transform:translate(-50%,-100%) rotate(160deg);animation:hl-min 12s linear infinite}
+  @keyframes hl-hr{from{transform:translate(-50%,-100%) rotate(45deg)}to{transform:translate(-50%,-100%) rotate(405deg)}}
+  @keyframes hl-min{from{transform:translate(-50%,-100%) rotate(0deg)}to{transform:translate(-50%,-100%) rotate(360deg)}}
+  .hl-watch-pin{
+    position:absolute;left:50%;top:50%;width:6px;height:6px;
+    border-radius:50%;background:var(--brass-deep);
+    transform:translate(-50%,-50%);
+    box-shadow:0 0 0 1px var(--ink);
+  }
+
+  /* PHOTOGRAPH */
+  .hl-photo{
+    width:96px;padding:8px 8px 22px;
+    background:#FAF6EE;
+    border:1px solid rgba(114,75,57,0.25);
+    box-shadow:0 18px 30px -10px rgba(60,30,15,0.4), 0 4px 8px rgba(60,30,15,0.15);
+    transform:rotate(-6deg);
+    transform-style:preserve-3d;
+    animation:hl-photo-sway 8s ease-in-out infinite;
+  }
+  @keyframes hl-photo-sway{
+    0%,100%{transform:rotate(-6deg)}
+    50%{transform:rotate(4deg)}
+  }
+  .hl-photo-img{
+    aspect-ratio:1/1.05;
+    background:
+      radial-gradient(ellipse at 30% 35%, rgba(255,235,200,0.5), transparent 50%),
+      linear-gradient(180deg, #C8A88C 0%, #8C6650 50%, #4A3225 100%);
+    position:relative;overflow:hidden;
+  }
+  .hl-photo-img::before{
+    content:"";position:absolute;inset:0;
+    background:
+      radial-gradient(ellipse 12px 18px at 35% 60%, #2A1F18, transparent 70%),
+      radial-gradient(ellipse 14px 20px at 60% 65%, #2A1F18, transparent 70%),
+      radial-gradient(ellipse 8px 12px at 35% 38%, #5A3F32, transparent 70%),
+      radial-gradient(ellipse 9px 13px at 60% 36%, #5A3F32, transparent 70%);
+  }
+  .hl-photo-img::after{
+    content:"";position:absolute;inset:0;
+    background:
+      radial-gradient(circle at 80% 20%, rgba(245,239,232,0.4), transparent 30%),
+      radial-gradient(circle at 10% 90%, rgba(60,30,15,0.3), transparent 25%);
+    mix-blend-mode:overlay;
+  }
+  .hl-photo-cap{
+    margin-top:6px;text-align:center;font-family:'Fraunces',serif;font-style:italic;
+    font-size:9px;color:var(--coffee);letter-spacing:0.04em;
+  }
+
+  /* KEY */
+  .hl-key{
+    width:110px;height:38px;position:relative;
+    transform-style:preserve-3d;
+    animation:hl-key-spin 14s linear infinite;
+    filter:drop-shadow(0 8px 12px rgba(60,30,15,0.4));
+  }
+  @keyframes hl-key-spin{
+    0%{transform:rotateY(0) rotateZ(-12deg)}
+    50%{transform:rotateY(180deg) rotateZ(12deg)}
+    100%{transform:rotateY(360deg) rotateZ(-12deg)}
+  }
+  .hl-key-bow{
+    position:absolute;left:0;top:50%;transform:translateY(-50%);
+    width:34px;height:34px;border-radius:50%;
+    background:linear-gradient(135deg, #D9A878 0%, #6F4831 100%);
+    box-shadow:inset -3px -4px 6px rgba(0,0,0,0.3), inset 2px 3px 4px rgba(255,255,255,0.25);
+  }
+  .hl-key-bow::after{
+    content:"";position:absolute;inset:8px;border-radius:50%;
+    background:var(--cream);
+    box-shadow:inset 2px 3px 4px rgba(60,30,15,0.4);
+  }
+  .hl-key-shaft{
+    position:absolute;left:30px;top:50%;transform:translateY(-50%);
+    width:74px;height:6px;
+    background:linear-gradient(180deg, #E8C4A3, #B8835F 50%, #6F4831);
+    border-radius:0 2px 2px 0;
+  }
+  .hl-key-tooth{
+    position:absolute;background:linear-gradient(180deg,#E8C4A3,#6F4831);
+    width:6px;
+  }
+  .hl-t1{right:6px;top:50%;height:12px;transform:translateY(-3px)}
+  .hl-t2{right:18px;top:50%;height:9px;transform:translateY(-3px)}
+
+  /* LOCKET */
+  .hl-locket{
+    width:60px;height:90px;position:relative;
+    transform-style:preserve-3d;
+    animation:hl-locket-sway 5s ease-in-out infinite;
+  }
+  @keyframes hl-locket-sway{
+    0%,100%{transform:rotateZ(-8deg)}
+    50%{transform:rotateZ(8deg)}
+  }
+  .hl-locket-chain{
+    position:absolute;left:50%;top:0;width:1.5px;height:34px;
+    background:repeating-linear-gradient(0deg, #B8835F 0 2px, transparent 2px 4px);
+    transform:translateX(-50%);transform-origin:50% 0;
+  }
+  .hl-locket-pendant{
+    position:absolute;top:30px;left:50%;transform:translateX(-50%);
+    width:46px;height:56px;
+    background:
+      radial-gradient(ellipse at 30% 25%, rgba(255,255,255,0.55), transparent 50%),
+      linear-gradient(135deg, #E8C4A3 0%, #B8835F 50%, #6F4831 100%);
+    border-radius:50% 50% 48% 48% / 60% 60% 40% 40%;
+    box-shadow:
+      0 12px 24px -8px rgba(60,30,15,0.45),
+      inset -2px -3px 6px rgba(0,0,0,0.3),
+      inset 2px 3px 4px rgba(255,255,255,0.3);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .hl-locket-engrave{
+    font-family:'Fraunces',serif;font-style:italic;font-size:11px;
+    color:rgba(60,30,15,0.7);
+    text-shadow:0 1px 0 rgba(255,255,255,0.4);
+    letter-spacing:0.08em;
+  }
+
+  /* ---------- FAQ ---------- */
+  .faq-list{display:flex;flex-direction:column;gap:0;border-top:1px solid var(--line-red)}
+  details.faq{
+    border-bottom:1px solid var(--line-red);
+    padding:26px 0;
+  }
+  details.faq summary{
+    cursor:pointer;list-style:none;
+    font-family:'Fraunces',serif;font-weight:400;font-size:22px;
+    display:flex;justify-content:space-between;align-items:center;
+    color:var(--ink);
+  }
+  details.faq summary::-webkit-details-marker{display:none}
+  details.faq summary::after{
+    content:"+";font-family:'Fraunces',serif;font-size:28px;color:var(--coffee);
+    transition:transform .3s ease;
+  }
+  details.faq[open] summary::after{content:"\2212"}
+  details.faq p{color:var(--ink-soft);margin:18px 0 0;font-size:15px;max-width:760px}
+
+  /* ---------- CTA ---------- */
+  .cta{
+    margin:120px 40px 0;
+    background:var(--ink);
+    color:var(--linen);
+    border-radius:32px;
+    padding:100px 60px;
+    text-align:center;
+    position:relative;overflow:hidden;
+    max-width:1280px;margin-left:auto;margin-right:auto;
+  }
+  .cta::before{
+    content:"";position:absolute;inset:0;
+    background:
+      radial-gradient(circle at 20% 20%, rgba(207,157,123,0.25), transparent 40%),
+      radial-gradient(circle at 80% 80%, rgba(114,75,57,0.4), transparent 50%);
+    pointer-events:none;
+  }
+  .cta h2{
+    font-family:'Fraunces',serif;font-weight:300;font-size:clamp(40px,5vw,64px);
+    margin:0 auto;max-width:800px;line-height:1.1;letter-spacing:-0.02em;
+    position:relative;
+  }
+  .cta h2 em{color:var(--brass);font-style:italic}
+  .cta p{color:rgba(245,239,232,0.7);margin:24px auto 40px;max-width:540px;position:relative}
+  .cta .btn-primary{background:var(--brass);color:var(--ink);position:relative}
+  .cta .btn-primary:hover{background:var(--linen)}
+  /* converging seeds animation */
+  .cta-seed{
+    position:absolute;
+    top:50%;left:50%;
+    width:var(--size,14px);height:var(--size,14px);
+    border-radius:50%;
+    background:radial-gradient(circle, rgba(255,255,255,0.95) 0%, rgba(207,157,123,0.7) 40%, rgba(207,157,123,0) 75%);
+    transform:translate(calc(-50% + var(--dx,0)), calc(-50% + var(--dy,0))) scale(1);
+    opacity:0;
+    pointer-events:none;
+    filter:blur(0.6px);
+    z-index:1;
+  }
+  .cta-converge.go .cta-seed{
+    animation:seed-converge var(--dur,2.4s) ease-in var(--delay,0s) forwards;
+  }
+  @keyframes seed-converge{
+    0%   {transform:translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1);   opacity:0;}
+    20%  {opacity:1;}
+    85%  {opacity:0.9;}
+    100% {transform:translate(-50%, -50%) scale(0.2);                                      opacity:0;}
+  }
+  .cta-converge::after{
+    content:"";position:absolute;top:50%;left:50%;
+    width:6px;height:6px;border-radius:50%;
+    background:#fff;
+    transform:translate(-50%,-50%) scale(0);
+    box-shadow:0 0 0 0 rgba(142,44,44,0.6);
+    opacity:0;
+    pointer-events:none;
+  }
+  .cta-converge.go::after{
+    animation:cta-pulse 2.4s ease-out 1.4s forwards;
+  }
+  @keyframes cta-pulse{
+    0%   {transform:translate(-50%,-50%) scale(0); opacity:0;}
+    40%  {transform:translate(-50%,-50%) scale(1); opacity:1; box-shadow:0 0 60px 20px rgba(142,44,44,0.55);}
+    100% {transform:translate(-50%,-50%) scale(2); opacity:0; box-shadow:0 0 120px 60px rgba(142,44,44,0);}
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer{padding:60px 40px 40px;border-top:1px solid var(--line);margin-top:80px}
+  footer .row{max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px}
+  footer .links{display:flex;gap:32px;font-size:13px;color:var(--ink-soft)}
+  footer .copy{font-size:12px;color:var(--ink-soft);letter-spacing:0.06em}
+
+  @media (max-width:920px){
+    .hero{grid-template-columns:1fr;padding-top:120px}
+    .section-head{grid-template-columns:1fr;gap:30px}
+    .steps{grid-template-columns:1fr 1fr}
+    .personas{grid-template-columns:1fr}
+    .heirloom-grid{grid-template-columns:1fr}
+    nav .links{display:none}
+    .waitlist-form{max-width:100%}
+    .cta-waitlist-form{max-width:100%}
+  }
+
+  @media (max-width:480px){
+    .waitlist-form,
+    .cta-waitlist-form{
+      flex-direction:column;
+    }
+    .waitlist-form .btn,
+    .cta-waitlist-form .btn{
+      width:100%;
+      justify-content:center;
+    }
+    .cta{padding:60px 24px;border-radius:20px;margin:80px 16px 0}
+    section{padding:80px 20px}
+    nav.top .row{padding:14px 20px}
+    .hero{padding:120px 20px 60px}
+    footer{padding:40px 20px}
+    footer .row{flex-direction:column;align-items:flex-start}
+  }
+</style>
 </head>
-<body>
+<body data-stats="hidden">
 
-  <!-- NAV -->
-  <nav id="main-nav">
-    <div class="nav-inner">
-      <a href="#" class="nav-logo"><svg class="heirlo-mark" width="28" height="28" viewBox="0 0 280 280"
-  fill="none" xmlns="http://www.w3.org/2000/svg"
-  style="overflow:visible;display:inline-block;vertical-align:middle"
-  aria-label="Heirlo" role="img">
-  <defs>
-    <filter id="heirlo-glow" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="2.5" result="b"/>
-      <feMerge><feMergeNode in="b"/><feMergeNode in="b"/>
-      <feMergeNode in="SourceGraphic"/></feMerge>
-    </filter>
-  </defs>
-  <path d="M140 178 Q138 198 136 218" stroke="#CF9D7B" stroke-width="2.5" stroke-linecap="round"/>
-  <path d="M138 202 Q118 196 112 207 Q128 210 138 204" stroke="#724B39" stroke-width="1.25" stroke-linecap="round" opacity="0.65"/>
-  <path d="M137 212 Q157 206 162 217 Q148 218 137 214" stroke="#724B39" stroke-width="1" stroke-linecap="round" opacity="0.45"/>
-  <circle cx="140" cy="122" r="8" stroke="#CF9D7B" stroke-width="1.75" filter="url(#heirlo-glow)"/>
-  <circle cx="140" cy="122" r="4" fill="#CF9D7B" opacity="0.55"/>
-  <line x1="140" y1="114" x2="140" y2="67" stroke="#CF9D7B" stroke-width="1" opacity="0.9"/>
-  <circle cx="140" cy="65" r="3" fill="#CF9D7B" filter="url(#heirlo-glow)"/>
-  <ellipse cx="140" cy="59" rx="10" ry="3" stroke="#CF9D7B" stroke-width="1.25" opacity="0.85" filter="url(#heirlo-glow)"/>
-  <line x1="144" y1="115" x2="167" y2="74" stroke="#CF9D7B" stroke-width="1" opacity="0.88"/>
-  <circle cx="168" cy="72" r="3" fill="#CF9D7B" filter="url(#heirlo-glow)"/>
-  <ellipse cx="172" cy="67" rx="10" ry="3" stroke="#CF9D7B" stroke-width="1.25" opacity="0.8" transform="rotate(-30 172 67)" filter="url(#heirlo-glow)"/>
-  <line x1="148" y1="117" x2="188" y2="94" stroke="#CF9D7B" stroke-width="1" opacity="0.85"/>
-  <circle cx="189" cy="93" r="3" fill="#CF9D7B" filter="url(#heirlo-glow)"/>
-  <ellipse cx="194" cy="89" rx="10" ry="3" stroke="#CF9D7B" stroke-width="1.25" opacity="0.78" transform="rotate(-60 194 89)" filter="url(#heirlo-glow)"/>
-  <line x1="148" y1="122" x2="195" y2="122" stroke="#CF9D7B" stroke-width="1" opacity="0.82"/>
-  <circle cx="197" cy="122" r="3" fill="#CF9D7B"/>
-  <ellipse cx="203" cy="122" rx="10" ry="3" stroke="#CF9D7B" stroke-width="1.25" opacity="0.72" transform="rotate(90 203 122)"/>
-  <line x1="147" y1="129" x2="187" y2="150" stroke="#CF9D7B" stroke-width="1" opacity="0.78"/>
-  <circle cx="188" cy="151" r="2.5" fill="#CF9D7B" opacity="0.85"/>
-  <ellipse cx="193" cy="155" rx="9" ry="2.5" stroke="#CF9D7B" stroke-width="1" opacity="0.65" transform="rotate(60 193 155)"/>
-  <line x1="143" y1="130" x2="167" y2="170" stroke="#CF9D7B" stroke-width="1" opacity="0.72"/>
-  <circle cx="168" cy="172" r="2.5" fill="#CF9D7B" opacity="0.8"/>
-  <ellipse cx="171" cy="177" rx="9" ry="2.5" stroke="#CF9D7B" stroke-width="1" opacity="0.6" transform="rotate(30 171 177)"/>
-  <line x1="137" y1="130" x2="113" y2="170" stroke="#CF9D7B" stroke-width="1" opacity="0.72"/>
-  <circle cx="112" cy="172" r="2.5" fill="#CF9D7B" opacity="0.8"/>
-  <ellipse cx="109" cy="177" rx="9" ry="2.5" stroke="#CF9D7B" stroke-width="1" opacity="0.6" transform="rotate(-30 109 177)"/>
-  <line x1="133" y1="129" x2="93" y2="150" stroke="#CF9D7B" stroke-width="1" opacity="0.78"/>
-  <circle cx="92" cy="151" r="2.5" fill="#CF9D7B" opacity="0.85"/>
-  <ellipse cx="87" cy="155" rx="9" ry="2.5" stroke="#CF9D7B" stroke-width="1" opacity="0.65" transform="rotate(-60 87 155)"/>
-  <line x1="132" y1="122" x2="85" y2="122" stroke="#CF9D7B" stroke-width="1" opacity="0.82"/>
-  <circle cx="83" cy="122" r="3" fill="#CF9D7B"/>
-  <ellipse cx="77" cy="122" rx="10" ry="3" stroke="#CF9D7B" stroke-width="1.25" opacity="0.72" transform="rotate(90 77 122)"/>
-  <line x1="132" y1="117" x2="92" y2="94" stroke="#CF9D7B" stroke-width="1" opacity="0.85"/>
-  <circle cx="91" cy="93" r="3" fill="#CF9D7B" filter="url(#heirlo-glow)"/>
-  <ellipse cx="86" cy="89" rx="10" ry="3" stroke="#CF9D7B" stroke-width="1.25" opacity="0.78" transform="rotate(60 86 89)" filter="url(#heirlo-glow)"/>
-  <line x1="136" y1="115" x2="113" y2="74" stroke="#CF9D7B" stroke-width="1" opacity="0.88"/>
-  <circle cx="112" cy="72" r="3" fill="#CF9D7B" filter="url(#heirlo-glow)"/>
-  <ellipse cx="108" cy="67" rx="10" ry="3" stroke="#CF9D7B" stroke-width="1.25" opacity="0.8" transform="rotate(30 108 67)" filter="url(#heirlo-glow)"/>
-  <g class="drifter-a">
-    <line x1="207" y1="72" x2="213" y2="60" stroke="#CF9D7B" stroke-width="0.75"/>
-    <circle cx="214" cy="58" r="2" fill="#CF9D7B"/>
-    <ellipse cx="216" cy="54" rx="7" ry="2" stroke="#CF9D7B" stroke-width="0.9" transform="rotate(-25 216 54)"/>
-  </g>
-  <g class="drifter-b">
-    <line x1="212" y1="114" x2="220" y2="104" stroke="#CF9D7B" stroke-width="0.75"/>
-    <circle cx="221" cy="102" r="2" fill="#CF9D7B"/>
-    <ellipse cx="224" cy="99" rx="7" ry="2" stroke="#CF9D7B" stroke-width="0.9" transform="rotate(-10 224 99)"/>
-  </g>
-  <g class="drifter-c">
-    <line x1="219" y1="59" x2="226" y2="47" stroke="#CF9D7B" stroke-width="0.6"/>
-    <circle cx="227" cy="45" r="1.75" fill="#CF9D7B"/>
-    <ellipse cx="229" cy="42" rx="6" ry="1.75" stroke="#CF9D7B" stroke-width="0.75" transform="rotate(-30 229 42)"/>
-  </g>
-</svg> HEIR<span class="logo-l">L</span><span class="logo-o">O</span></a>
-      <ul class="nav-links">
-        <li><a href="#how-it-works">How it works</a></li>
-        <li><a href="#who-its-for">Who it's for</a></li>
-        <li><a href="#faq">FAQ</a></li>
-      </ul>
-      <a href="#waitlist" class="btn btn-brass">Join Waitlist</a>
+<!-- ===================== NAV ===================== -->
+<nav class="top">
+  <div class="row">
+    <div class="logo">HEIR<span class="l">L</span><span class="o">O</span></div>
+    <div class="links">
+      <a href="#how">How it works</a>
+      <a href="#who">Who it's for</a>
+      <a href="#faq">FAQ</a>
     </div>
-  </nav>
+    <a href="#waitlist" class="btn btn-primary">Join Waitlist</a>
+  </div>
+</nav>
 
-  <!-- HERO -->
-  <section class="hero" id="waitlist">
-    <div class="hero-inner">
-      <span class="hero-eyebrow">Now accepting early access</span>
-      <div class="hero-wordmark">HEIR<span class="logo-l">L</span><span class="logo-o">O</span></div>
-      <p class="hero-tagline">Legacy, clarified.</p>
-      <p class="hero-sub">
-        Heirlo helps you document your belongings, assign them to the people who matter, and create a clear record — so nothing is lost, disputed, or forgotten.
-      </p>
-
+<!-- ===================== HERO ===================== -->
+<header class="hero" id="waitlist">
+  <div>
+    <div class="pill"><span class="dot"></span>Now accepting early access</div>
+    <h1 class="display hero-title">Legacy,<br><span class="accent">clarified.</span></h1>
+    <p class="hero-sub">Heirlo helps you document your belongings, assign them to the people who matter, and create a clear record — so nothing is lost, disputed, or forgotten.</p>
+    <div class="hero-cta">
       <form class="waitlist-form" id="hero-form" onsubmit="handleSubmit(event,'hero-form','hero-success')">
         <input type="email" placeholder="your@email.com" required aria-label="Email address" />
-        <button type="submit" class="btn btn-brass btn-lg">Join Waitlist</button>
+        <button type="submit" class="btn btn-primary">Join Waitlist</button>
       </form>
-      <div class="form-success" id="hero-success">
-        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-        <span id="hero-success-msg"></span>
-      </div>
-      <p class="form-error" id="hero-error"></p>
-      <p class="form-note">Free to join. No credit card required.</p>
-
-      <div class="hero-social">
-        <div class="avatars">
-          <div class="avatar">A</div>
-          <div class="avatar">M</div>
-          <div class="avatar">J</div>
-          <div class="avatar">R</div>
-          <div class="avatar">S</div>
-        </div>
-        <span class="social-proof">Join 400+ families already on the list</span>
-      </div>
     </div>
-  </section>
-
-  <!-- HOW IT WORKS -->
-  <section class="how" id="how-it-works">
-    <div class="section-header">
-      <span class="section-label">The process</span>
-      <h2 class="section-title">Simple by design,<br />meaningful by nature</h2>
-      <p class="section-sub">Four steps to turn your possessions into a clear, compassionate legacy.</p>
+    <div class="form-success" id="hero-success">
+      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      <span id="hero-success-msg"></span>
     </div>
-
-    <div class="steps-grid">
-      <div class="step">
-        <div class="step-num">01</div>
-        <div class="step-icon">
-          <svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-        </div>
-        <h3>Photograph your items</h3>
-        <p>Capture photos of meaningful belongings — jewellery, furniture, art, keepsakes. Add a note about the story behind each one.</p>
+    <p class="form-error" id="hero-error"></p>
+    <p class="form-note">Free to join. No credit card required.</p>
+    <div class="hero-meta">
+      <div class="avatars">
+        <div class="av">A</div><div class="av">M</div><div class="av">J</div><div class="av">R</div><div class="av">S</div>
       </div>
-
-      <div class="step">
-        <div class="step-num">02</div>
-        <div class="step-icon">
-          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        </div>
-        <h3>Assign recipients</h3>
-        <p>Choose who should receive each item. Add a personal message explaining why you want them to have it.</p>
-      </div>
-
-      <div class="step">
-        <div class="step-num">03</div>
-        <div class="step-icon">
-          <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        </div>
-        <h3>Recipients acknowledge</h3>
-        <p>Loved ones receive a gentle notification and can acknowledge their assignment — creating mutual understanding while you're still here.</p>
-      </div>
-
-      <div class="step">
-        <div class="step-num">04</div>
-        <div class="step-icon">
-          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-        </div>
-        <h3>Generate your document</h3>
-        <p>Export a clean, signed personal property memorandum — a legally persuasive companion to your will that reduces family conflict.</p>
-      </div>
+      <span>Join 400+ families already on the list</span>
     </div>
-  </section>
+  </div>
 
-  <!-- WHO IT'S FOR -->
-  <section class="who" id="who-its-for">
-    <div class="section-header" style="max-width:1120px;margin:0 auto 56px;">
-      <span class="section-label">Who it's for</span>
-      <h2 class="section-title">Built for people<br />thinking ahead</h2>
-      <p class="section-sub">Heirlo is for anyone who cares about what happens to the things they love.</p>
+  <div class="dandelion-stage" aria-hidden="true">
+    <div class="dandelion-photo"></div>
+    <div class="dandelion" id="dandelion"></div>
+    <div class="free-seed s1"></div>
+    <div class="free-seed s2"></div>
+    <div class="free-seed s3"></div>
+  </div>
+
+  <div class="stats-strip" id="stats"></div>
+</header>
+
+<!-- ===================== HOW IT WORKS ===================== -->
+<section id="how">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">The process</span>
+        <h2 class="display">Simple by design,<br><em>meaningful</em> by nature.</h2>
+      </div>
+      <p class="section-lead">Four steps to turn your possessions into a clear, compassionate legacy — photographed, assigned, acknowledged, and notarized.</p>
     </div>
 
-    <div class="personas-grid">
-      <div class="persona-card">
-        <span class="persona-emoji">👵</span>
+    <div class="steps">
+      <div class="step">
+        <div class="num">01</div>
+        <h3>Photograph<br>your items</h3>
+        <p>Capture belongings as you go. Heirlo recognises objects and writes a starter description.</p>
+      </div>
+      <div class="step">
+        <div class="num">02</div>
+        <h3>Assign<br>recipients</h3>
+        <p>Choose who receives what. Add a private note explaining why you want them to have it.</p>
+      </div>
+      <div class="step">
+        <div class="num">03</div>
+        <h3>Loved ones<br>acknowledge</h3>
+        <p>Recipients receive a gentle invitation and respond — creating mutual understanding while you're still here.</p>
+      </div>
+      <div class="step">
+        <div class="num">04</div>
+        <h3>Generate<br>your memorandum</h3>
+        <p>Export a clean, signed personal property memorandum — a legally persuasive companion to your will.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== WHO IT'S FOR ===================== -->
+<section id="who" style="background:var(--paper)">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Who it's for</span>
+        <h2 class="display">Built for people<br><em>thinking ahead.</em></h2>
+      </div>
+      <p class="section-lead">Heirlo is for anyone who cares about what happens to the things they love — and the people who'll inherit them.</p>
+    </div>
+
+    <div class="personas">
+      <div class="persona" data-tilt>
+        <div class="float-icon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M10 20l14-10 14 10v18H10z"/><path d="M20 38v-12h8v12"/><path d="M6 22l18-13 18 13"/></svg></div>
+        <div class="glyph">G</div>
+        <span class="trigger">Retirement · Health change</span>
         <h3>The Grandparent Archivist</h3>
-        <p><strong style="color:rgba(207,157,123,0.4);font-weight:300;">Trigger: Retirement or health change</strong></p>
-        <p>Has a lifetime of meaningful objects and wants the family to understand what they mean — and who should have them.</p>
+        <p>A lifetime of meaningful objects — and a family that doesn't yet know what they mean, or who should have them.</p>
       </div>
-
-      <div class="persona-card">
-        <span class="persona-emoji">✈️</span>
+      <div class="persona" data-tilt>
+        <div class="float-icon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6 36c6-3 12-3 18 0s12 3 18 0"/><path d="M6 28c6-3 12-3 18 0s12 3 18 0"/><circle cx="38" cy="14" r="4"/><path d="M28 12h8"/></svg></div>
+        <div class="glyph">T</div>
+        <span class="trigger">Mortality salience spike</span>
         <h3>The Anxious Traveler</h3>
-        <p><strong style="color:rgba(207,157,123,0.4);font-weight:300;">Trigger: Mortality salience spike</strong></p>
-        <p>Books a long flight and suddenly feels the weight of everything left unspoken. Opens Heirlo at 2am before takeoff.</p>
+        <p>Books a long flight and feels the weight of everything left unspoken. Opens Heirlo at 2am before takeoff.</p>
       </div>
-
-      <div class="persona-card">
-        <span class="persona-emoji">🐾</span>
+      <div class="persona" data-tilt>
+        <div class="float-icon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M16 28c-2 0-4 2-4 5s2 5 4 5h16c2 0 4-2 4-5s-2-5-4-5"/><path d="M14 28c-1-3 1-7 4-8M34 28c1-3-1-7-4-8"/><circle cx="19" cy="18" r="3"/><circle cx="29" cy="18" r="3"/><circle cx="15" cy="24" r="2"/><circle cx="33" cy="24" r="2"/></svg></div>
+        <div class="glyph">P</div>
+        <span class="trigger">Late-night fear</span>
         <h3>The Worried Pet Owner</h3>
-        <p><strong style="color:rgba(207,157,123,0.4);font-weight:300;">Trigger: Late-night fear</strong></p>
-        <p>Wants to make sure someone has committed — actually committed — to caring for their dog if something happens.</p>
+        <p>Wants someone to actually commit — on the record — to caring for their dog if something happens.</p>
       </div>
-
-      <div class="persona-card">
-        <span class="persona-emoji">👶</span>
+      <div class="persona" data-tilt>
+        <div class="float-icon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="14" cy="14" r="4"/><circle cx="30" cy="14" r="4"/><circle cx="22" cy="24" r="4"/><circle cx="34" cy="30" r="4"/><circle cx="26" cy="38" r="4"/></svg></div>
+        <div class="glyph">N</div>
+        <span class="trigger">Birth of first child</span>
         <h3>The New Parent</h3>
-        <p><strong style="color:rgba(207,157,123,0.4);font-weight:300;">Trigger: Birth of first child</strong></p>
-        <p>Realizing for the first time that their things need to go somewhere specific. Doesn't know where to start. Heirlo is the start.</p>
+        <p>Realizing for the first time that their things need to go somewhere specific. Heirlo is the start.</p>
       </div>
-
-      <div class="persona-card">
-        <span class="persona-emoji">⚖️</span>
+      <div class="persona" data-tilt>
+        <div class="float-icon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="8" y="10" width="32" height="28" rx="3"/><path d="M8 18h32"/><path d="M16 26l4 4 12-12"/></svg></div>
+        <div class="glyph">D</div>
+        <span class="trigger">Asset division</span>
         <h3>The Recently Divorced</h3>
-        <p><strong style="color:rgba(207,157,123,0.4);font-weight:300;">Trigger: Asset division</strong></p>
-        <p>Ownership of everything just got renegotiated. Wants a clean record of what's theirs and who it goes to — on their terms.</p>
+        <p>Ownership of everything just got renegotiated. Wants a clean record of what's theirs and where it goes.</p>
       </div>
-
-      <div class="persona-card">
-        <span class="persona-emoji">💙</span>
+      <div class="persona" data-tilt>
+        <div class="float-icon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M24 6v36"/><path d="M16 14l8-8 8 8"/><path d="M10 30l-4 8 8-4"/><path d="M38 30l4 8-8-4"/></svg></div>
+        <div class="glyph">C</div>
+        <span class="trigger">Parent's diagnosis</span>
         <h3>The Devoted Child</h3>
-        <p><strong style="color:rgba(207,157,123,0.4);font-weight:300;">Trigger: Parent's diagnosis</strong></p>
-        <p>Helping an aging parent get organized before it becomes a crisis. Heirlo is the conversation starter that doesn't feel like death planning.</p>
+        <p>Helping an aging parent get organized before it becomes a crisis. The conversation starter that doesn't feel like death planning.</p>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- FAQ -->
-  <section class="faq" id="faq">
-    <div class="faq-inner">
-      <span class="section-label">Questions</span>
-      <h2 class="section-title">Frequently asked</h2>
-
-      <div class="faq-list">
-
-        <div class="faq-item">
-          <button class="faq-question" aria-expanded="false">
-            Is Heirlo a legal service or a law firm?
-            <span class="faq-icon" aria-hidden="true"></span>
-          </button>
-          <div class="faq-answer" role="region">
-            <div class="faq-answer-inner">
-              No. Heirlo is a documentation platform, not a law firm. We do not give legal advice. The document Heirlo generates is a Personal Property Memorandum — a statutory instrument under UPC §2-513 that doesn't require attorney involvement to be valid in 41 U.S. states. For wills, trusts, and complex estate matters, you'll want an attorney. Heirlo handles everything they don't.
-            </div>
+<!-- ===================== FLOATING HEIRLOOMS — 3D scene ===================== -->
+<section id="heirlooms" class="heirloom-scene">
+  <div class="container heirloom-grid">
+    <div class="heirloom-copy">
+      <span class="eyebrow">What you'll document</span>
+      <h2 class="display">Every object<br><em>has a story.</em></h2>
+      <p class="section-lead" style="margin-top:24px">Move your cursor across the scene. Every heirloom — the ring, the watch, the photograph, the key — carries meaning that fades unless someone is told. Heirlo is where you tell it.</p>
+      <ul class="heirloom-list">
+        <li><span class="hl-dot"></span>Jewellery, watches, keepsakes</li>
+        <li><span class="hl-dot"></span>Photographs and letters</li>
+        <li><span class="hl-dot"></span>Furniture, art, instruments</li>
+        <li><span class="hl-dot"></span>Books, records, collections</li>
+      </ul>
+    </div>
+    <div class="heirloom-stage" id="heirloomStage">
+      <div class="hl-floor"></div>
+      <!-- Ring -->
+      <div class="hl-obj" data-depth="1.2" style="--x:18%;--y:24%">
+        <div class="hl-ring">
+          <div class="hl-ring-band"></div>
+          <div class="hl-ring-stone"></div>
+        </div>
+        <div class="hl-label">Mom's ring</div>
+      </div>
+      <!-- Pocket watch -->
+      <div class="hl-obj" data-depth="1.6" style="--x:72%;--y:18%">
+        <div class="hl-watch">
+          <div class="hl-watch-crown"></div>
+          <div class="hl-watch-face">
+            <span class="hl-tick" style="--a:0deg"></span>
+            <span class="hl-tick" style="--a:90deg"></span>
+            <span class="hl-tick" style="--a:180deg"></span>
+            <span class="hl-tick" style="--a:270deg"></span>
+            <div class="hl-watch-hand hl-hour"></div>
+            <div class="hl-watch-hand hl-min"></div>
+            <div class="hl-watch-pin"></div>
           </div>
         </div>
-
-
-        <div class="faq-item">
-          <button class="faq-question" aria-expanded="false">
-            What does it cost?
-            <span class="faq-icon" aria-hidden="true"></span>
-          </button>
-          <div class="faq-answer" role="region">
-            <div class="faq-answer-inner">
-              Heirlo is completely free to use. Document your items, assign recipients, and collect acknowledgments at no cost. Pricing for additional features will be announced soon.
-            </div>
+        <div class="hl-label">Father's watch</div>
+      </div>
+      <!-- Photograph -->
+      <div class="hl-obj" data-depth="0.8" style="--x:30%;--y:62%">
+        <div class="hl-photo">
+          <div class="hl-photo-img"></div>
+          <div class="hl-photo-cap">Summer · 1972</div>
+        </div>
+        <div class="hl-label">Family photo</div>
+      </div>
+      <!-- Key -->
+      <div class="hl-obj" data-depth="2.0" style="--x:78%;--y:66%">
+        <div class="hl-key">
+          <div class="hl-key-bow"></div>
+          <div class="hl-key-shaft"></div>
+          <div class="hl-key-tooth hl-t1"></div>
+          <div class="hl-key-tooth hl-t2"></div>
+        </div>
+        <div class="hl-label">Cabin key</div>
+      </div>
+      <!-- Locket -->
+      <div class="hl-obj" data-depth="1.4" style="--x:50%;--y:42%">
+        <div class="hl-locket">
+          <div class="hl-locket-chain"></div>
+          <div class="hl-locket-pendant">
+            <div class="hl-locket-engrave">M · J</div>
           </div>
         </div>
-
-        <div class="faq-item">
-          <button class="faq-question" aria-expanded="false">
-            Do my family members need an Heirlo account?
-            <span class="faq-icon" aria-hidden="true"></span>
-          </button>
-          <div class="faq-answer" role="region">
-            <div class="faq-answer-inner">
-              Recipients receive an email when they've been assigned an item. They can view and acknowledge the assignment through a simple web page — no app download or account required. The acknowledgment is timestamped and stored automatically.
-            </div>
-          </div>
-        </div>
-
-        <div class="faq-item">
-          <button class="faq-question" aria-expanded="false">
-            Is my information private and secure?
-            <span class="faq-icon" aria-hidden="true"></span>
-          </button>
-          <div class="faq-answer" role="region">
-            <div class="faq-answer-inner">
-              Yes. Your data is private by default. Only you can see your full item catalog. Recipients only see the specific items assigned to them. All data is stored securely — your information is never shared or sold.
-            </div>
-          </div>
-        </div>
-
-        <div class="faq-item">
-          <button class="faq-question" aria-expanded="false">
-            Does Heirlo replace a will?
-            <span class="faq-icon" aria-hidden="true"></span>
-          </button>
-          <div class="faq-answer" role="region">
-            <div class="faq-answer-inner">
-              No — and we're clear about that. A will handles the legal transfer of your entire estate. Heirlo handles the specific, tangible things a will almost never names: your grandmother's ring, your dog, your guitar, your record collection. Heirlo works alongside any existing or future will.
-            </div>
-          </div>
-        </div>
-
+        <div class="hl-label">Locket, 1948</div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- SECOND CTA -->
-  <section class="cta-section">
-    <span class="section-label">Get early access</span>
-    <h2 class="section-title">Legacy should be <span style="color:var(--brass);">acknowledged</span>, not assumed.</h2>
-    <p class="section-sub">Join hundreds of families who are already thinking ahead. Early access is free.</p>
+<!-- ===================== FAQ ===================== -->
+<section id="faq">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Questions</span>
+        <h2 class="display">Frequently<br><em>asked.</em></h2>
+      </div>
+      <p class="section-lead">The clarifications most people want before they begin documenting.</p>
+    </div>
 
-    <form class="cta-waitlist-form" id="cta-form" onsubmit="handleSubmit(event,'cta-form','cta-success')">
+    <div class="faq-list">
+      <details class="faq" open>
+        <summary>Is Heirlo a legal service or a law firm?</summary>
+        <p>No. Heirlo is a documentation platform, not a law firm. We do not give legal advice. The document Heirlo generates is a Personal Property Memorandum — a statutory instrument under UPC §2-513 that doesn't require attorney involvement to be valid in 41 U.S. states. For wills, trusts, and complex estate matters, you'll want an attorney. Heirlo handles everything they don't.</p>
+      </details>
+      <details class="faq">
+        <summary>What does it cost?</summary>
+        <p>Heirlo is free to use. Document your items, assign recipients, and collect acknowledgments at no cost. Your first notarized document is free; additional documents are $9.99.</p>
+      </details>
+      <details class="faq">
+        <summary>Do my family members need an Heirlo account?</summary>
+        <p>Recipients receive an email when they've been assigned an item. They can view and acknowledge through a simple web page — no app download or account required. The acknowledgment is timestamped and stored automatically.</p>
+      </details>
+      <details class="faq">
+        <summary>Is my information private and secure?</summary>
+        <p>Yes. Your data is private by default. Only you can see your full item catalog. Recipients only see the specific items assigned to them. All data is stored securely — never shared or sold.</p>
+      </details>
+      <details class="faq">
+        <summary>Does Heirlo replace a will?</summary>
+        <p>No — and we're clear about that. A will handles the legal transfer of your entire estate. Heirlo handles the specific, tangible things a will almost never names: your grandmother's ring, your dog, your guitar, your record collection. Heirlo works alongside any existing or future will.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CTA ===================== -->
+<section style="padding:0">
+  <div class="cta cta-converge">
+    <span class="eyebrow" style="color:var(--brass);position:relative">Get early access</span>
+    <h2>Legacy should be<br><em>acknowledged,</em> not assumed.</h2>
+    <p>Join hundreds of families who are already thinking ahead. Early access is free.</p>
+    <form class="cta-waitlist-form" id="cta-form" onsubmit="handleSubmit(event,'cta-form','cta-success')" style="position:relative">
       <input type="email" placeholder="your@email.com" required aria-label="Email address" />
-      <button type="submit" class="btn btn-brass btn-lg">Join the Waitlist</button>
+      <button type="submit" class="btn btn-primary">Join Waitlist</button>
     </form>
-    <div class="form-success" id="cta-success">
+    <div class="cta-form-success" id="cta-success" style="position:relative">
       <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
       <span id="cta-success-msg"></span>
     </div>
-    <p class="form-error" id="cta-error"></p>
-    <p class="cta-note">No spam. Unsubscribe any time.</p>
-  </section>
-
-  <!-- FOOTER -->
-  <footer>
-    <div class="footer-inner">
-      <a href="#" class="footer-logo">HEIR<span class="logo-l">L</span>O</a>
-      <ul class="footer-links">
-        <li><a href="#">Privacy</a></li>
-        <li><a href="#">Terms</a></li>
-        <li><a href="#">Contact</a></li>
-      </ul>
-      <span class="footer-copy">&copy; 2026 Heirlo. All rights reserved.</span>
+    <p class="cta-form-error" id="cta-error"></p>
+    <p class="cta-form-note" style="position:relative">Free to join. No credit card required.</p>
+    <div class="hero-meta" style="justify-content:center;margin-top:24px;position:relative;color:rgba(245,239,232,0.6)">
+      <div class="avatars">
+        <div class="av">A</div><div class="av">M</div><div class="av">J</div><div class="av">R</div><div class="av">S</div>
+      </div>
+      <span>Join 400+ families already on the list</span>
     </div>
-  </footer>
+  </div>
+</section>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-  <script>
-    // FAQ accordion
-    document.querySelectorAll('.faq-question').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const item = btn.closest('.faq-item');
-        const answer = item.querySelector('.faq-answer');
-        const isOpen = item.classList.contains('open');
+<!-- ===================== FOOTER ===================== -->
+<footer>
+  <div class="row">
+    <div class="logo">HEIR<span class="l">L</span><span class="o">O</span></div>
+    <div class="links">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Contact</a>
+    </div>
+    <div class="copy">&copy; 2026 Heirlo. All rights reserved.</div>
+  </div>
+</footer>
 
-        document.querySelectorAll('.faq-item').forEach(i => {
-          i.classList.remove('open');
-          i.querySelector('.faq-answer').style.maxHeight = null;
-          i.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
-        });
+<!-- ===================== SCROLL SEEDS ===================== -->
+<canvas id="seedfield" aria-hidden="true"
+  style="position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;"></canvas>
 
-        if (!isOpen) {
-          item.classList.add('open');
-          answer.style.maxHeight = answer.scrollHeight + 'px';
-          btn.setAttribute('aria-expanded', 'true');
-        }
-      });
+<!-- ===================== SCRIPTS ===================== -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+  // Supabase client
+  const supabaseClient = window.supabase.createClient(
+    'https://bxenkisbaqqjbcdyyoeq.supabase.co',
+    'sb_publishable_P7m9YFuuuQEoI48qa0ocYQ_03n05l-T'
+  );
+
+  // Waitlist form submit — handles both hero and CTA forms
+  async function handleSubmit(e, formId, successId) {
+    e.preventDefault();
+
+    const form = document.getElementById(formId);
+    const successEl = document.getElementById(successId);
+    const msgEl = document.getElementById(successId.replace('success', 'success-msg'));
+    const errorEl = document.getElementById(successId.replace('success', 'error'));
+    const email = form.querySelector('input[type="email"]').value.trim();
+    const btn = form.querySelector('button[type="submit"]');
+
+    btn.disabled = true;
+    errorEl.textContent = '';
+
+    const { error } = await supabaseClient.from('waitlist').insert({ email });
+
+    btn.disabled = false;
+
+    if (!error) {
+      fetch('/api/notify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      }).catch(() => {});
+      msgEl.textContent = "You're on the list!";
+      form.style.display = 'none';
+      successEl.style.display = 'flex';
+    } else if (error.code === '23505') {
+      msgEl.textContent = "You're already on the list.";
+      form.style.display = 'none';
+      successEl.style.display = 'flex';
+    } else {
+      errorEl.textContent = 'Something went wrong, please try again.';
+    }
+  }
+
+  // Smooth scroll for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(link => {
+    link.addEventListener('click', e => {
+      const target = document.querySelector(link.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     });
+  });
+</script>
 
-    // Supabase client
-    const supabaseClient = window.supabase.createClient(
-      'https://bxenkisbaqqjbcdyyoeq.supabase.co',
-      'sb_publishable_P7m9YFuuuQEoI48qa0ocYQ_03n05l-T'
-    );
+<!-- ===================== DANDELION GENERATOR ===================== -->
+<script>
+  // Seed defaults
+  window.__SEED_DENSITY = 10;
+  window.__SEED_TRAIL = true;
+  window.__SEED_TONE = 'brass';
 
-    // Waitlist form submit
-    async function handleSubmit(e, formId, successId) {
-      e.preventDefault();
+  // Scroll-driven floating seeds
+  (function(){
+    const canvas = document.getElementById('seedfield');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    let W=0, H=0;
+    function resize(){
+      W = canvas.clientWidth; H = canvas.clientHeight;
+      canvas.width = W*dpr; canvas.height = H*dpr;
+      ctx.setTransform(dpr,0,0,dpr,0,0);
+    }
+    resize();
+    window.addEventListener('resize', resize);
 
-      const form = document.getElementById(formId);
-      const successEl = document.getElementById(successId);
-      const msgEl = document.getElementById(successId.replace('success', 'success-msg'));
-      const errorEl = document.getElementById(successId.replace('success', 'error'));
-      const email = form.querySelector('input[type="email"]').value.trim();
-      const btn = form.querySelector('button[type="submit"]');
+    const seeds = [];
+    let lastEmit = 0;
+    let lastScroll = window.scrollY;
 
-      btn.disabled = true;
-      errorEl.textContent = '';
+    function origin(){
+      const stage = document.querySelector('.dandelion-stage');
+      if (!stage) return {x:W*0.7, y:H*0.4};
+      const r = stage.getBoundingClientRect();
+      return { x: r.left + r.width*0.5, y: r.top + r.height*0.5 };
+    }
 
-      const { error } = await supabaseClient.from('waitlist').insert({ email });
+    function tone(){
+      const t = window.__SEED_TONE || 'brass';
+      if (t === 'coffee') return {core:'#724B39', halo:'rgba(114,75,57,'};
+      if (t === 'ink') return {core:'#1B1612', halo:'rgba(27,22,18,'};
+      return {core:'#CF9D7B', halo:'rgba(207,157,123,'};
+    }
 
-      btn.disabled = false;
+    function emit(scrollDelta){
+      const density = window.__SEED_DENSITY ?? 14;
+      if (density <= 0) return;
+      const now = performance.now();
+      const interval = Math.max(40, 600 - density*18 - Math.min(Math.abs(scrollDelta)*4, 300));
+      if (now - lastEmit < interval) return;
+      lastEmit = now;
+      const o = origin();
+      const fromAbove = o.y < H + 200;
+      const startX = fromAbove ? o.x + (Math.random()-0.5)*60 : Math.random()*W;
+      const startY = fromAbove ? o.y + (Math.random()-0.5)*60 : -10;
+      const drift = (Math.random()-0.5)*0.8;
+      seeds.push({
+        x:startX, y:startY,
+        ox:startX, oy:startY,
+        vx: drift,
+        vy: 0.3 + Math.random()*0.6,
+        r: 1.6 + Math.random()*2.2,
+        rot: Math.random()*Math.PI*2,
+        vrot: (Math.random()-0.5)*0.02,
+        life: 0,
+        maxLife: 600 + Math.random()*500,
+        sway: Math.random()*Math.PI*2,
+        swaySpeed: 0.005 + Math.random()*0.015,
+        swayAmp: 0.3 + Math.random()*0.7,
+        path: [],
+      });
+    }
 
-      if (!error) {
-        fetch('/api/notify', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email }),
-        }).catch(() => {});
-        msgEl.textContent = "You're on the list!";
-        form.style.display = 'none';
-        successEl.style.display = 'flex';
-      } else if (error.code === '23505') {
-        msgEl.textContent = "You're already on the list.";
-        form.style.display = 'none';
-        successEl.style.display = 'flex';
-      } else {
-        errorEl.textContent = 'Something went wrong, please try again.';
+    function tick(){
+      const trail = window.__SEED_TRAIL !== false;
+      ctx.clearRect(0,0,W,H);
+      const T = tone();
+      for (let i = seeds.length - 1; i >= 0; i--){
+        const s = seeds[i];
+        s.life++;
+        s.sway += s.swaySpeed;
+        s.x += s.vx + Math.sin(s.sway)*s.swayAmp;
+        s.y += s.vy;
+        s.vy = Math.min(s.vy + 0.0015, 1.4);
+        s.rot += s.vrot;
+        if (trail){
+          if (s.life % 2 === 0) s.path.push({x:s.x, y:s.y});
+          if (s.path.length > 40) s.path.shift();
+        }
+
+        const fadeIn = Math.min(s.life/30, 1);
+        const fadeOut = s.life > s.maxLife*0.7
+          ? 1 - (s.life - s.maxLife*0.7)/(s.maxLife*0.3)
+          : 1;
+        const alpha = Math.max(0, Math.min(fadeIn, fadeOut)) * 0.85;
+
+        if (trail && s.path.length > 1){
+          ctx.strokeStyle = T.halo + (alpha*0.18) + ')';
+          ctx.lineWidth = 0.8;
+          ctx.beginPath();
+          ctx.moveTo(s.path[0].x, s.path[0].y);
+          for (let p = 1; p < s.path.length; p++){
+            ctx.lineTo(s.path[p].x, s.path[p].y);
+          }
+          ctx.stroke();
+        }
+
+        const grad = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r*4);
+        grad.addColorStop(0, T.halo + (alpha*0.6) + ')');
+        grad.addColorStop(0.5, T.halo + (alpha*0.15) + ')');
+        grad.addColorStop(1, T.halo + '0)');
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r*4, 0, Math.PI*2);
+        ctx.fill();
+
+        ctx.fillStyle = T.core;
+        ctx.globalAlpha = alpha;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r*0.6, 0, Math.PI*2);
+        ctx.fill();
+
+        ctx.strokeStyle = T.halo + (alpha*0.5) + ')';
+        ctx.lineWidth = 0.6;
+        ctx.beginPath();
+        ctx.moveTo(s.x, s.y);
+        ctx.lineTo(s.x + Math.cos(s.rot)*s.r*3, s.y + Math.sin(s.rot)*s.r*3);
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+
+        if (s.life > s.maxLife || s.y > H + 30 || s.x < -30 || s.x > W + 30){
+          seeds.splice(i,1);
+        }
+      }
+      requestAnimationFrame(tick);
+    }
+    tick();
+
+    let scrolling = false;
+    window.addEventListener('scroll', () => {
+      const dy = window.scrollY - lastScroll;
+      lastScroll = window.scrollY;
+      emit(dy);
+      if (!scrolling){
+        scrolling = true;
+        setTimeout(()=>{scrolling=false;}, 50);
+      }
+    }, { passive: true });
+
+    setInterval(() => {
+      if (Math.random() < 0.4) emit(0);
+    }, 800);
+  })();
+</script>
+
+<script>
+  // Build the 3D dandelion
+  (function(){
+    const root = document.getElementById('dandelion');
+    if (!root) return;
+    const SEEDS = 90;
+    const rand = (i, salt) => {
+      const x = Math.sin(i * 9301 + salt * 49297) * 233280;
+      return x - Math.floor(x);
+    };
+    for (let i = 0; i < SEEDS; i++){
+      const phi = Math.acos(1 - 2*(i + 0.5)/SEEDS);
+      const theta = Math.PI * (1 + Math.sqrt(5)) * i;
+      const xRot = (phi * 180/Math.PI) + (rand(i,1)-0.5) * 8;
+      const yRot = (theta * 180/Math.PI) + (rand(i,2)-0.5) * 6;
+      const lengthPct = 44 + rand(i,3) * 8;
+      const tuft = 14 + rand(i,4) * 14;
+      const tuftBlur = 0.3 + rand(i,5) * 0.8;
+      const tuftAlpha = 0.85 + rand(i,6) * 0.15;
+      const stemAlpha = 0.7 + rand(i,7) * 0.3;
+
+      const seed = document.createElement('div');
+      seed.className = 'seed';
+      seed.style.height = lengthPct + '%';
+      seed.style.setProperty('--tuft', tuft + 'px');
+      seed.style.setProperty('--tuft-blur', tuftBlur + 'px');
+      seed.style.setProperty('--tuft-opacity', tuftAlpha);
+      seed.style.setProperty('--stem-opacity', stemAlpha);
+      seed.style.setProperty('--final-transform', `translate(-50%,-100%) rotateY(${yRot}deg) rotateX(${xRot}deg)`);
+      seed.style.setProperty('--in-delay', (rand(i,11) * 0.2).toFixed(2) + 's');
+      seed.style.setProperty('--in-dur',   (2.5 + rand(i,12) * 0.3).toFixed(2) + 's');
+      root.appendChild(seed);
+    }
+    // central core
+    const core = document.createElement('div');
+    core.className = 'dandelion-core';
+    root.parentElement.appendChild(core);
+    // gather-glow
+    const glow = document.createElement('div');
+    glow.className = 'gather-glow';
+    root.parentElement.appendChild(glow);
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const stage = document.querySelector('.dandelion-stage');
+
+    if (reduceMotion) {
+      requestAnimationFrame(() => {
+        root.classList.add('lit');
+        stage?.classList.add('lit');
+      });
+      return;
+    }
+
+    // Phase 1: drift-in seeds
+    function spawnDriftSeeds(){
+      if (!stage) return;
+      const sRect = stage.getBoundingClientRect();
+      const stageCenterX = sRect.left + sRect.width/2;
+      const stageCenterY = sRect.top + sRect.height/2;
+      const N = 36;
+      for (let j = 0; j < N; j++){
+        const driftSeed = document.createElement('div');
+        driftSeed.className = 'drift-seed';
+        const angle = Math.random() * Math.PI * 2;
+        const dist = 280 + Math.random() * 320;
+        const startX = stageCenterX + Math.cos(angle) * dist;
+        const startY = stageCenterY + Math.sin(angle) * dist;
+        driftSeed.style.left = startX + 'px';
+        driftSeed.style.top  = startY + 'px';
+        driftSeed.style.setProperty('--dx', (-Math.cos(angle) * dist).toFixed(0) + 'px');
+        driftSeed.style.setProperty('--dy', (-Math.sin(angle) * dist).toFixed(0) + 'px');
+        driftSeed.style.setProperty('--drift-dur', (2.4 + Math.random() * 1.0).toFixed(2) + 's');
+        driftSeed.style.setProperty('--drift-delay', (Math.random() * 1.0).toFixed(2) + 's');
+        driftSeed.style.setProperty('--drift-size', (10 + Math.random() * 8).toFixed(0) + 'px');
+        document.body.appendChild(driftSeed);
+        setTimeout(() => driftSeed.remove(), 4500);
       }
     }
 
-    // Smooth scroll
-    document.querySelectorAll('a[href^="#"]').forEach(link => {
-      link.addEventListener('click', e => {
-        const target = document.querySelector(link.getAttribute('href'));
-        if (target) {
-          e.preventDefault();
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
+    // Staged entrance
+    requestAnimationFrame(() => {
+      spawnDriftSeeds();
+      setTimeout(() => {
+        stage?.classList.add('gathered');
+      }, 3400);
+      setTimeout(() => {
+        root.classList.add('lit');
+        stage?.classList.add('lit');
+      }, 5200);
+    });
+  })();
+
+  // Subtle parallax on dandelion stage
+  (function(){
+    const stage = document.querySelector('.dandelion-stage');
+    const photo = stage?.querySelector('.dandelion-photo');
+    if (!stage || !photo) return;
+    let raf;
+    stage.addEventListener('mousemove', (e) => {
+      const r = stage.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      const y = (e.clientY - r.top) / r.height - 0.5;
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        if (!stage.classList.contains('settled')) return;
+        photo.style.animationPlayState = 'paused';
+        photo.style.transform = `translate(${x*-12}px, ${y*-10}px) scale(1.02) rotate(${x*2.5}deg)`;
       });
     });
+    stage.addEventListener('mouseleave', () => {
+      photo.style.transform = '';
+      photo.style.animationPlayState = '';
+    });
+    setTimeout(() => stage.classList.add('settled'), 3200);
+  })();
 
-    // Nav border on scroll
-    const nav = document.getElementById('main-nav');
-    window.addEventListener('scroll', () => {
-      nav.style.borderBottomColor = window.scrollY > 20
-        ? 'rgba(207,157,123,0.15)'
-        : 'rgba(207,157,123,0.08)';
-    }, { passive: true });
-  </script>
+  // ---------- PERSONA 3D TILT ----------
+  (function(){
+    const cards = document.querySelectorAll('.persona[data-tilt]');
+    cards.forEach(card => {
+      let raf;
+      card.addEventListener('mousemove', (e) => {
+        const r = card.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width;
+        const y = (e.clientY - r.top) / r.height;
+        cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(() => {
+          const ry = (x - 0.5) * 18;
+          const rx = (0.5 - y) * 14;
+          card.style.transform = `rotateY(${ry}deg) rotateX(${rx}deg) translateZ(0)`;
+          card.style.setProperty('--mx', (x*100)+'%');
+          card.style.setProperty('--my', (y*100)+'%');
+        });
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = '';
+      });
+    });
+  })();
+
+
+  // ---------- CTA seeds converging ----------
+  (function(){
+    const cta = document.querySelector('.cta-converge');
+    if (!cta) return;
+    const N = 36;
+    const rand = (i,s) => { const x = Math.sin(i*7919 + s*1543)*10000; return x - Math.floor(x); };
+    for (let i = 0; i < N; i++){
+      const s = document.createElement('span');
+      s.className = 'cta-seed';
+      const angle = rand(i,1) * Math.PI * 2;
+      const dist = 200 + rand(i,2) * 280;
+      const dx = Math.cos(angle) * dist;
+      const dy = Math.sin(angle) * dist;
+      s.style.setProperty('--dx', dx+'px');
+      s.style.setProperty('--dy', dy+'px');
+      s.style.setProperty('--dur', (1.6 + rand(i,3)*1.4) + 's');
+      s.style.setProperty('--delay', (rand(i,4)*0.8) + 's');
+      s.style.setProperty('--size', (10 + rand(i,5)*10) + 'px');
+      cta.appendChild(s);
+    }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(en => {
+        if (en.isIntersecting) cta.classList.add('go');
+      });
+    }, { threshold: 0.4 });
+    io.observe(cta);
+  })();
+
+  // ---------- HEIRLOOM SCENE — cursor parallax ----------
+  (function(){
+    const stage = document.getElementById('heirloomStage');
+    if (!stage) return;
+    const objs = stage.querySelectorAll('.hl-obj');
+    let raf;
+    stage.addEventListener('mousemove', (e) => {
+      const r = stage.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      const y = (e.clientY - r.top) / r.height - 0.5;
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        objs.forEach(o => {
+          const d = parseFloat(o.dataset.depth || '1');
+          const tx = -x * 30 * d;
+          const ty = -y * 24 * d;
+          o.style.transform = `translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px))`;
+        });
+      });
+    });
+    stage.addEventListener('mouseleave', () => {
+      objs.forEach(o => { o.style.transform = ''; });
+    });
+  })();
+</script>
 </body>
 </html>
