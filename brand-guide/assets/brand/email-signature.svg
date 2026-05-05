@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 200">
+  <defs>
+    
+  </defs>
+  <line x1="0" y1="0" x2="600" y2="0" stroke="rgba(114,75,57,0.28)" stroke-width="0.5"></line>
+  <image href="assets/brand/dandelion-geometric.svg" x="0" y="30" width="84" height="84"></image>
+  <g transform="translate(108 56)">
+    <text class="wm" font-size="32" fill="#1B1612" y="0">Eleanor Hayes</text>
+    <text font-family="DM Sans,sans-serif" font-size="11" letter-spacing="2" fill="#B8835F" y="22">FOUNDER  ·  HEIRL<tspan>O</tspan></text>
+  </g>
+  <line x1="108" y1="98" x2="500" y2="98" stroke="rgba(114,75,57,0.28)" stroke-width="0.5"></line>
+  <g transform="translate(108 120)" font-family="DM Sans,sans-serif" font-size="12" fill="#3D332C">
+    <text y="0">eleanor@heirlo.co  ·  +1 (646) 555-0114</text>
+    <text y="20">heirlo.co  ·  Brooklyn, New York</text>
+    <text y="40" font-family="Fraunces" font-style="italic" font-size="13" fill="#B8835F">&#34;What outlives us, told as we&#39;d want it told.&#34;</text>
+  </g>
+</svg>
