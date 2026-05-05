@@ -10,7 +10,7 @@
       ]
     },
     {
-      "source": "/brand-guide/(.*)",
+      "source": "/brand-guide(/.*)?",
       "headers": [
         { "key": "X-Robots-Tag", "value": "noindex, nofollow" }
       ]
